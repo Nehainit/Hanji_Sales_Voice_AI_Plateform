@@ -1,0 +1,19 @@
+# Secrets: never commit. Only the empty template is shared.
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+
+# Local machine and data
+.DS_Store
+recordings/
+.claude/settings.local.json

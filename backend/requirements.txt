@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+httpx
+python-multipart
+openpyxl
+redis
+pytest
+
+# Added in Phase 1 when the voice pipeline is built:
+# pipecat-ai  (with the Sarvam, Anthropic and websocket extras)

@@ -1,0 +1,30 @@
+schema: spec-driven
+
+context: |
+  Product: HaanJi (working name), a no-code voice agent that phones Indian D2C customers
+  a few minutes after a cash-on-delivery (COD) order to confirm, cancel or reschedule it,
+  so sellers lose less money to RTO (return to origin).
+  Users: sellers with zero technical knowledge; end customers who only talk on the phone;
+  the internal admin team.
+  Market: India. Calls in Hinglish, Hindi or English. Money in INR, stored as integer paise.
+  Times are IST. Calls only inside the seller's calling hours (default 9 AM to 9 PM).
+  Stack: Python FastAPI backend, Pipecat voice pipeline, Exotel telephony, Sarvam AI
+  speech-to-text and text-to-speech, Claude Haiku 4.5, Redis queue, Supabase Postgres,
+  Shopify app, Razorpay UPI, Next.js dashboard, hosted in AWS Mumbai.
+  The project owner is non-technical, so every artifact must be readable without coding knowledge.
+  The clickable prototype in dashboard/prototype/ is the design reference for all screens.
+
+rules:
+  proposal:
+    - Use simple English and short sentences. Explain any technical word in brackets the first time it appears.
+    - Keep it under 300 words. Always list what is out of scope.
+  specs:
+    - Write requirements from what the seller or customer sees, not code internals.
+    - Keep each requirement to one or two sentences.
+    - Use concrete examples in scenarios (real rupee amounts, times, names).
+  design:
+    - Keep it under 500 words. Prefer a small table or diagram over long paragraphs.
+    - For each decision, state the choice and one line of why.
+  tasks:
+    - Keep each task small (about half a day of work or less).
+    - Write each task so a non-developer can tell when it is done.

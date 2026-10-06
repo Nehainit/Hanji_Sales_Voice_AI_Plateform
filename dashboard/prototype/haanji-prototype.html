@@ -1,0 +1,1056 @@
+<title>HaanJi Seller App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --ground:#F2F5F3; --surface:#FFFFFF; --surface-2:#F7F9F8;
+  --ink:#13201B; --ink-2:#47554F; --muted:#76837E; --line:#DCE3DF; --line-2:#C9D2CD;
+  --brand:#0B6E5B; --brand-hover:#095C4C; --brand-ink:#FFFFFF; --brand-soft:#DCEFE8; --brand-text:#0A5D4D;
+  --marigold:#F2A20C; --marigold-soft:#FFF1D2; --marigold-ink:#5A3A00;
+  --s-good:#0ca30c; --s-crit:#d03b3b; --s-warn:#fab219; --s-none:#AEB8B3;
+  --good-text:#006300; --crit-text:#A82626; --warn-text:#7A5300; --none-text:#55625D;
+  --good-bg:#E2F4E2; --crit-bg:#FBE6E6; --warn-bg:#FFF2D1; --none-bg:#ECEFEE;
+  --shadow:0 1px 2px rgba(19,32,27,.06),0 8px 24px rgba(19,32,27,.08);
+  --scrim:rgba(10,20,16,.45);
+  --display:"Baloo 2","Hind",system-ui,sans-serif;
+  --body:"Hind",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0E1412; --surface:#16201C; --surface-2:#1B2622;
+    --ink:#E8F0EC; --ink-2:#AAB8B2; --muted:#7F8D87; --line:#26332E; --line-2:#33423C;
+    --brand:#2DB291; --brand-hover:#3CC4A2; --brand-ink:#06231B; --brand-soft:#123A30; --brand-text:#5ED3B3;
+    --marigold:#F5B83D; --marigold-soft:#3A2C0C; --marigold-ink:#FFE2A6;
+    --s-none:#56635E;
+    --good-text:#4CC44C; --crit-text:#F08080; --warn-text:#F7C75A; --none-text:#A6B3AE;
+    --good-bg:#16301A; --crit-bg:#3A1A1A; --warn-bg:#3A2E10; --none-bg:#222C28;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    --scrim:rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0E1412; --surface:#16201C; --surface-2:#1B2622;
+  --ink:#E8F0EC; --ink-2:#AAB8B2; --muted:#7F8D87; --line:#26332E; --line-2:#33423C;
+  --brand:#2DB291; --brand-hover:#3CC4A2; --brand-ink:#06231B; --brand-soft:#123A30; --brand-text:#5ED3B3;
+  --marigold:#F5B83D; --marigold-soft:#3A2C0C; --marigold-ink:#FFE2A6;
+  --s-none:#56635E;
+  --good-text:#4CC44C; --crit-text:#F08080; --warn-text:#F7C75A; --none-text:#A6B3AE;
+  --good-bg:#16301A; --crit-bg:#3A1A1A; --warn-bg:#3A2E10; --none-bg:#222C28;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  --scrim:rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance;font-weight:700}
+h1{font-size:clamp(28px,4.4vw,44px)}
+h2{font-size:24px}
+h3{font-size:18px}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.mono{font-family:var(--mono);font-size:.88em}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.ink2{color:var(--ink-2)}
+.small{font-size:13px}
+
+/* buttons & inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;min-height:44px;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.primary:hover{background:var(--brand-hover)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.lbl{font-weight:600;font-size:14px}
+.field .hint{font-size:13px;color:var(--muted)}
+.input,select.input,textarea.input{width:100%;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:10px 12px;min-height:44px}
+textarea.input{min-height:84px;resize:vertical;line-height:1.45}
+.input:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.stack{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:500;background:var(--surface);cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.switch{position:relative;width:44px;height:26px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.switch span{position:absolute;inset:0;border-radius:99px;background:var(--line-2);transition:background .15s}
+.switch span::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--surface);transition:transform .15s}
+.switch input:checked+span{background:var(--brand)}
+.switch input:checked+span::after{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+
+/* status pills */
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px 2px 8px;font-size:13px;font-weight:600;white-space:nowrap}
+.pill i{font-style:normal;width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;color:#fff}
+.pill.confirmed{background:var(--good-bg);color:var(--good-text)} .pill.confirmed i{background:var(--s-good)}
+.pill.cancelled{background:var(--crit-bg);color:var(--crit-text)} .pill.cancelled i{background:var(--s-crit)}
+.pill.callback{background:var(--warn-bg);color:var(--warn-text)} .pill.callback i{background:var(--s-warn);color:#3a2a00}
+.pill.noanswer{background:var(--none-bg);color:var(--none-text)} .pill.noanswer i{background:var(--s-none)}
+
+/* prototype bar */
+.proto{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--ink);color:var(--surface);display:flex;align-items:center;gap:12px;padding:8px 16px;font-size:13px}
+.proto b{font-weight:600;white-space:nowrap}
+.proto .jump{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none}
+.proto .jump::-webkit-scrollbar{display:none}
+.proto .jump button{background:transparent;border:0;color:inherit;opacity:.7;padding:4px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;font-size:13px}
+.proto .jump button:hover{opacity:1;background:rgba(255,255,255,.08)}
+.proto .jump button[aria-current="true"]{opacity:1;background:rgba(255,255,255,.16)}
+.lang-toggle{display:flex;border:1px solid rgba(255,255,255,.25);border-radius:8px;overflow:hidden;flex:none}
+.lang-toggle button{background:transparent;border:0;color:inherit;padding:4px 10px;cursor:pointer;font-size:13px}
+.lang-toggle button[aria-pressed="true"]{background:var(--surface);color:var(--ink)}
+
+/* signup */
+.signup{min-height:calc(100vh - 44px);display:grid;grid-template-columns:1.1fr .9fr;gap:0}
+.signup .pitch{padding:56px clamp(16px,5vw,64px);display:flex;flex-direction:column;gap:28px;justify-content:center;background:var(--brand-soft)}
+.logo{font-family:var(--display);font-weight:800;font-size:26px;color:var(--brand-text);display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.logo svg{flex:none}
+.pitch .lede{font-size:18px;color:var(--ink-2);max-width:52ch}
+.callcard{background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow);max-width:440px;display:flex;flex-direction:column;gap:10px}
+.callcard .top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.bubble{padding:10px 14px;border-radius:14px;max-width:88%;font-size:15px;line-height:1.4}
+.bubble.bot{background:var(--surface-2);border:1px solid var(--line);border-top-left-radius:4px;align-self:flex-start}
+.bubble.cust{background:var(--brand);color:var(--brand-ink);border-top-right-radius:4px;align-self:flex-end}
+.proof{display:flex;gap:24px;flex-wrap:wrap}
+.proof div{display:flex;flex-direction:column}
+.proof strong{font-family:var(--display);font-size:22px;color:var(--ink)}
+.proof span{font-size:13px;color:var(--ink-2)}
+.signup .form{padding:56px clamp(16px,5vw,64px);display:flex;flex-direction:column;justify-content:center;gap:18px;max-width:480px;width:100%;justify-self:center}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.otp{display:flex;gap:8px}
+.otp input{width:52px;text-align:center;font-size:20px;font-weight:600}
+
+/* onboarding */
+.onboard{max-width:760px;margin:0 auto;padding-block:40px 80px;padding-inline:16px;display:flex;flex-direction:column;gap:28px}
+.stepper{display:flex;gap:8px;list-style:none;margin:0;padding:0}
+.stepper li{flex:1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
+.stepper li::before{content:"";height:4px;border-radius:4px;background:var(--line)}
+.stepper li.done::before,.stepper li.on::before{background:var(--brand)}
+.stepper li.on{color:var(--ink)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.opt{border:1.5px solid var(--line-2);border-radius:14px;padding:16px;background:var(--surface);cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:44px}
+.opt:hover{border-color:var(--brand)}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);box-shadow:inset 0 0 0 1px var(--brand)}
+.opt:disabled{opacity:.5;cursor:not-allowed}
+.opt .t{font-weight:600;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tag{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:var(--marigold-soft);color:var(--marigold-ink)}
+.success{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--good-bg);color:var(--good-text);font-weight:500}
+.onboard .nav{display:flex;justify-content:space-between;gap:12px}
+.voice{flex-direction:row;align-items:center;justify-content:space-between}
+.voice .play{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);display:grid;place-items:center;cursor:pointer;flex:none}
+
+/* shell */
+.shell{display:grid;grid-template-columns:232px 1fr;min-height:calc(100vh - 44px)}
+.side{border-right:1px solid var(--line);background:var(--surface);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:44px;height:calc(100vh - 44px)}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav button{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:500;color:var(--ink-2);text-align:left;min-height:44px}
+.side nav button:hover{background:var(--surface-2);color:var(--ink)}
+.side nav button[aria-current="page"]{background:var(--brand-soft);color:var(--brand-text);font-weight:600}
+.side nav svg{flex:none}
+.store{margin-top:auto;border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.store strong{font-size:14px}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--good-text);font-weight:600}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--s-good);box-shadow:0 0 0 3px var(--good-bg)}
+.content{padding-block:28px 64px;padding-inline:clamp(16px,3vw,40px);display:flex;flex-direction:column;gap:24px;min-width:0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.head p{color:var(--ink-2);margin-top:4px}
+.wallet-chip{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line-2);border-radius:999px;padding:6px 14px;background:var(--surface);cursor:pointer;font-weight:500;min-height:40px}
+.wallet-chip b{font-weight:600}
+
+/* dashboard */
+.hero{display:grid;grid-template-columns:1.2fr 2fr;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.hero .saved{background:var(--marigold-soft);padding:24px;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.hero .saved .lbl{color:var(--marigold-ink)}
+.hero .saved .big{font-family:var(--body);font-weight:600;font-size:52px;line-height:1;color:var(--ink);letter-spacing:-.02em}
+.hero .saved p{color:var(--marigold-ink);font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr)}
+.tile{padding:20px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--line)}
+.tile .k{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.tile .k i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.tile .v{font-size:30px;font-weight:600;line-height:1.1}
+.tile .d{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+.chart-wrap{position:relative}
+.chart-wrap svg{display:block;width:100%;height:auto;overflow:visible}
+.chart-wrap .grid line{stroke:var(--line);stroke-width:1}
+.chart-wrap .base{stroke:var(--line-2);stroke-width:1}
+.chart-wrap text{fill:var(--muted);font-size:12px;font-family:var(--body)}
+.seg-good{fill:var(--s-good)} .seg-crit{fill:var(--s-crit)} .seg-none{fill:var(--s-none)}
+.col-hit{fill:transparent;cursor:pointer}
+.col-hit:hover,.col-hit.on{fill:var(--ink);fill-opacity:.04}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;padding:10px 12px;font-size:13px;min-width:160px;transform:translate(-50%,-100%);z-index:3}
+.tip .r{display:flex;justify-content:space-between;gap:16px}
+.tip .r span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
+.tip .r i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.attn{display:flex;flex-direction:column}
+.attn button{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border:0;border-top:1px solid var(--line);background:transparent;text-align:left;cursor:pointer;width:100%}
+.attn button:first-child{border-top:0;padding-top:0}
+.attn .dot{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none;font-size:13px;font-weight:700}
+.attn strong{display:block;font-weight:600}
+.attn span{font-size:13px;color:var(--ink-2)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:var(--surface-2)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+.mini-tbl table{min-width:0}
+.mini-tbl td,.mini-tbl th{padding:8px 12px}
+.mini-tbl tbody tr{cursor:default}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters .search{flex:1;min-width:200px;max-width:320px;margin-left:auto}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:60}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--surface);z-index:61;display:flex;flex-direction:column;box-shadow:var(--shadow);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer header{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.drawer .body{padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:500}
+.transcript{display:flex;flex-direction:column;gap:8px}
+.x{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);cursor:pointer;display:grid;place-items:center;flex:none}
+
+/* script editor */
+.editor{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+.vars{display:flex;gap:6px;flex-wrap:wrap}
+.vars button{font-family:var(--mono);font-size:12px;border:1px dashed var(--line-2);background:var(--surface-2);border-radius:6px;padding:4px 8px;cursor:pointer;min-height:32px}
+.branch{border-left:3px solid var(--line-2);padding-left:16px;display:flex;flex-direction:column;gap:12px}
+.branch.good{border-color:var(--s-good)} .branch.crit{border-color:var(--s-crit)} .branch.warn{border-color:var(--s-warn)}
+.branch-h{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.phone{position:sticky;top:68px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.phone .ctx{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:10px}
+.say{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+
+/* settings & wallet */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.set-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.set-row:first-of-type{border-top:0}
+.balance{font-weight:600;font-size:48px;line-height:1;letter-spacing:-.02em}
+.amts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.amts button{border:1.5px solid var(--line-2);background:var(--surface);border-radius:10px;padding:12px 8px;font-weight:600;cursor:pointer;min-height:48px}
+.amts button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-text)}
+.upi{border:1px dashed var(--line-2);border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center}
+.qr{width:96px;height:96px;flex:none;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+
+/* simulator */
+.sim{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px;background:var(--scrim)}
+.sim-card{width:min(420px,100%);max-height:calc(100vh - 32px);background:var(--surface);border-radius:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.sim-top{background:var(--brand);color:var(--brand-ink);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sim-top strong{font-family:var(--display);font-size:20px;display:block;line-height:1.1}
+.sim-top span{font-size:13px;opacity:.85}
+.sim-top .x{background:transparent;border-color:currentColor;color:inherit}
+.sim-log{padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;flex:1;min-height:240px}
+.sim-foot{border-top:1px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--surface-2)}
+.sim-foot .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.replies{display:flex;flex-direction:column;gap:6px}
+.replies button{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:500;min-height:44px}
+.replies button:hover{border-color:var(--brand)}
+.typing{display:inline-flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+.result{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:12px;z-index:90;font-weight:500;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@media (max-width:1100px){
+  .hero{grid-template-columns:1fr}
+  .grid2,.editor{grid-template-columns:1fr}
+  .phone{position:static}
+}
+@media (max-width:820px){
+  .signup{grid-template-columns:1fr}
+  .signup .pitch{padding-block:32px}
+  .signup .form{padding-block:32px 48px}
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--line);z-index:30}
+  .side .logo,.side .store{display:none}
+  .side nav{flex-direction:row;flex:1;justify-content:space-around}
+  .side nav button{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;flex:1;align-items:center}
+  .content{padding-bottom:110px}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tile:nth-child(odd){border-left:0}
+  .tile:nth-child(n+3){border-top:1px solid var(--line)}
+  .hero .saved .big{font-size:44px}
+  .amts{grid-template-columns:repeat(2,1fr)}
+  .proto .hide-sm{display:none}
+}
+</style>
+
+<div class="proto" role="region" aria-label="Prototype controls">
+  <b><span data-t="proto">Prototype</span><span class="hide-sm"> · <span data-t="sample">sample data</span></span></b>
+  <div class="jump" id="jump"></div>
+  <div class="lang-toggle" role="group" aria-label="App language">
+    <button id="lang-en" aria-pressed="true">EN</button>
+    <button id="lang-hi" aria-pressed="false">हिंदी</button>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<section id="v-signup" class="signup">
+  <div class="pitch">
+    <div class="logo"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="9" fill="var(--brand)"/><path d="M9 15.5l4 4 8-9" fill="none" stroke="var(--brand-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>HaanJi</div>
+    <h1 data-t="su_h">Confirm every COD order with a phone call. Automatically.</h1>
+    <p class="lede" data-t="su_lede">HaanJi calls your customer in Hindi or English minutes after they order. Orders they don't want get cancelled before shipping, so you stop paying for RTO.</p>
+    <div class="callcard" aria-label="Example call">
+      <div class="top"><span>Kesar Kurtis → Priya, Jaipur</span><span class="num">0:18</span></div>
+      <div class="bubble bot">Namaste Priya ji! Aapne ₹1,299 ka Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?</div>
+      <div class="bubble cust">Haan ji, bhej dijiye.</div>
+      <div class="row small"><span class="pill confirmed"><i>✓</i><span data-t="o_confirmed">Confirmed</span></span><span class="muted" data-t="su_tagged">Tagged in Shopify automatically</span></div>
+    </div>
+    <div class="proof">
+      <div><strong data-t="pf1v">No coding</strong><span data-t="pf1">Set up like a WhatsApp profile</span></div>
+      <div><strong data-t="pf2v">5 min</strong><span data-t="pf2">to go live</span></div>
+      <div><strong>₹3</strong><span data-t="pf3">per answered call</span></div>
+    </div>
+  </div>
+  <div class="form">
+    <h2 data-t="su_start">Start free. 50 calls on us.</h2>
+    <button class="btn block" id="google-btn"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9h6" stroke="currentColor" stroke-width="2"/></svg><span data-t="su_google">Continue with Google</span></button>
+    <div class="divider" data-t="or">or</div>
+    <div class="field">
+      <label for="phone" data-t="su_phone">Mobile number</label>
+      <div class="row" style="flex-wrap:nowrap"><span class="input" style="width:auto;flex:none;display:flex;align-items:center">+91</span><input class="input num" id="phone" inputmode="numeric" value="98290 41122" aria-label="Mobile number"></div>
+    </div>
+    <div class="field" id="otp-field" hidden>
+      <label data-t="su_otp">Enter the OTP sent on SMS</label>
+      <div class="otp">
+        <input class="input" id="otp1" value="4" maxlength="1" aria-label="OTP digit 1"><input class="input" id="otp2" value="7" maxlength="1" aria-label="OTP digit 2"><input class="input" id="otp3" value="2" maxlength="1" aria-label="OTP digit 3"><input class="input" id="otp4" value="9" maxlength="1" aria-label="OTP digit 4">
+      </div>
+    </div>
+    <button class="btn primary block" id="otp-btn" data-t="su_send">Send OTP</button>
+    <p class="small muted" data-t="su_terms">By continuing you agree to the Terms. We never call your customers without your go-live.</p>
+  </div>
+</section>
+
+<!-- ONBOARDING -->
+<section id="v-onboard" class="onboard" hidden>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="9" fill="var(--brand)"/><path d="M9 15.5l4 4 8-9" fill="none" stroke="var(--brand-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>HaanJi</div>
+  <ol class="stepper" id="stepper"></ol>
+  <div id="ob-body" class="stack"></div>
+  <div class="nav">
+    <button class="btn ghost" id="ob-back" data-t="back">Back</button>
+    <button class="btn primary" id="ob-next" data-t="next">Next</button>
+  </div>
+</section>
+
+<!-- APP SHELL -->
+<div id="v-app" class="shell" hidden>
+  <aside class="side">
+    <div class="logo" style="font-size:22px;padding:0 8px"><svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="9" fill="var(--brand)"/><path d="M9 15.5l4 4 8-9" fill="none" stroke="var(--brand-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>HaanJi</div>
+    <nav id="nav" aria-label="Main"></nav>
+    <div class="store">
+      <strong>Kesar Kurtis</strong>
+      <span class="muted">kesarkurtis.myshopify.com</span>
+      <span class="live" data-t="live">Live · calling new COD orders</span>
+    </div>
+  </aside>
+  <main class="content" id="content"></main>
+</div>
+
+<div id="drawer-root"></div>
+<div id="sim-root"></div>
+<div id="toast-root"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- i18n ---------- */
+var T = {
+en:{
+ proto:"Prototype", sample:"sample data", back:"Back", next:"Next", or:"or",
+ su_h:"Confirm every COD order with a phone call. Automatically.",
+ su_lede:"HaanJi calls your customer in Hindi or English minutes after they order. Orders they don't want get cancelled before shipping, so you stop paying for RTO.",
+ su_tagged:"Tagged in Shopify automatically", pf1v:"No coding", pf1:"Set up like a WhatsApp profile", pf2v:"5 min", pf2:"to go live", pf3:"per answered call",
+ su_start:"Start free. 50 calls on us.", su_google:"Continue with Google", su_phone:"Mobile number", su_otp:"Enter the OTP sent on SMS", su_send:"Send OTP", su_verify:"Verify & continue",
+ su_terms:"By continuing you agree to the Terms. We never call your customers until you go live.",
+ st1:"Connect store", st2:"Language", st3:"Voice", st4:"Test call",
+ ob1_h:"Where do your orders come from?", ob1_p:"We read new COD orders from here and call each customer.",
+ shopify:"Shopify store", shopify_p:"One click. New orders come in automatically.", excel:"Excel / Google Sheet", excel_p:"Upload a sheet of orders. Works with any website.",
+ connect:"Connect", connected:"Connected", sheet_cols:"Your sheet needs these columns:",
+ ob2_h:"Which language should the calls be in?", ob2_p:"If a customer replies in another language, the agent switches on its own.",
+ hinglish:"Hinglish", hinglish_p:"Hindi + English mix, how most customers talk", hindi:"Hindi", hindi_p:"Pure Hindi", english:"English", english_p:"Indian English",
+ recommended:"Recommended", soon:"Coming soon",
+ ob3_h:"Pick a voice for your brand", ob3_p:"Tap play to hear each one. You can change it anytime.",
+ ob4_h:"Hear it on a test call", ob4_p:"Play the customer and try every answer. Nothing goes to real customers.",
+ test_phone:"Your number", run_test:"Start test call", go_live:"Go live",
+ nav_dash:"Dashboard", nav_calls:"Calls", nav_script:"Call script", nav_settings:"Settings", nav_wallet:"Wallet",
+ live:"Live · calling new COD orders",
+ dash_h:"Good evening, Kesar Kurtis", dash_p:"Here's what your calls did today.",
+ saved_month:"RTO money saved this month", saved_note:"293 orders cancelled before shipping × ₹160 shipping both ways",
+ k_calls:"Calls today", k_conf:"Confirmed", k_canc:"Cancelled", k_pend:"No answer / later",
+ vs_yday:"vs yesterday", of_calls:"of calls",
+ chart_h:"Last 7 days", table_view:"Table", chart_view:"Chart",
+ attn_h:"Needs your attention",
+ a1:"3 customers asked to change address", a1s:"Update in Shopify before shipping",
+ a2:"5 callbacks scheduled", a2s:"Next at 7:00 PM today",
+ a3:"Wallet will last ~4 days", a3s:"₹1,840 left · recharge to keep calling",
+ calls_h:"Calls", calls_p:"Every call, with recording and what the customer said.",
+ f_all:"All", search:"Search name, order or city",
+ c_time:"Time", c_order:"Order", c_cust:"Customer", c_amount:"Amount", c_result:"Result", c_try:"Tries",
+ o_confirmed:"Confirmed", o_cancelled:"Cancelled", o_callback:"Call later", o_noanswer:"No answer",
+ d_play:"Play recording", d_stop:"Stop", d_transcript:"What was said", d_tag:"Shopify tag", d_reason:"Cancel reason", d_attempts:"Attempts", d_dur:"Duration", d_city:"City",
+ script_h:"Call script", script_p:"Write what the agent says, in your own words. No flowcharts.",
+ sc_greet:"1. Opening line", sc_greet_h:"The agent says this first and asks to confirm the order.",
+ sc_yes:"If customer says YES", sc_addr:"Confirm the address", sc_close_ok:"Thank-you line",
+ sc_no:"If customer says NO", sc_reason:"Ask why they're cancelling", sc_close_no:"Closing line",
+ sc_later:"If customer is busy", sc_later_l:"Ask when to call back",
+ sc_vars:"Tap to insert:", save:"Save script", test_call:"Try a test call",
+ preview:"Live preview", preview_ctx:"Sample order: Priya Sharma · Cotton Anarkali Kurti · ₹1,299",
+ agent_says:"Agent says",
+ set_h:"Settings", set_p:"When and how the calls go out.",
+ set_when:"Call timing", st_delay:"Call after order is placed", st_from:"Call from", st_to:"Call until", st_retry:"Retry if no answer", st_gap:"Gap between tries",
+ set_voice:"Voice & language", set_store:"Order sources", set_rto:"RTO cost per order", set_rto_h:"Used to calculate money saved",
+ set_wa:"Send WhatsApp if call not answered", set_wa_h:"Available in the next version",
+ wal_h:"Wallet", wal_p:"Prepaid. Pay only for calls the customer answers.",
+ wal_bal:"Balance", wal_rate:"₹3 per answered call (up to 1 min) · unanswered calls are free",
+ wal_add:"Add money", wal_pay:"Pay with UPI", wal_hist:"Recent activity",
+ saved_t:"Saved. New settings apply from the next call.",
+ script_saved:"Script saved. The next call will use it.",
+ golive_t:"You're live! New COD orders will get a call 5 minutes after ordering.",
+ paid_t:"₹{a} added to wallet (prototype, no real payment).",
+ sim_live:"Test call · in progress", sim_ended:"Call ended", sim_reply:"Answer as the customer", voice_on:"Voice on", voice_off:"Voice off",
+ sim_result:"How this call shows up in your Calls list", again:"Try again", close:"Close"
+},
+hi:{
+ proto:"प्रोटोटाइप", sample:"सैंपल डेटा", back:"पीछे", next:"आगे", or:"या",
+ su_h:"हर COD ऑर्डर को फ़ोन कॉल से कन्फ़र्म करें। अपने आप।",
+ su_lede:"ऑर्डर के कुछ मिनट बाद HaanJi ग्राहक को हिंदी या इंग्लिश में कॉल करता है। जो ऑर्डर ग्राहक नहीं चाहता, वो शिप होने से पहले कैंसल हो जाता है, और RTO का खर्च बचता है।",
+ su_tagged:"Shopify में अपने आप टैग", pf1v:"कोडिंग नहीं", pf1:"WhatsApp प्रोफ़ाइल जितना आसान सेटअप", pf2v:"5 मिनट", pf2:"में लाइव", pf3:"हर उठाई गई कॉल",
+ su_start:"फ़्री शुरू करें। 50 कॉल हमारी तरफ़ से।", su_google:"Google से आगे बढ़ें", su_phone:"मोबाइल नंबर", su_otp:"SMS पर आया OTP डालें", su_send:"OTP भेजें", su_verify:"वेरिफ़ाई करके आगे बढ़ें",
+ su_terms:"आगे बढ़कर आप शर्तें मानते हैं। जब तक आप लाइव नहीं करते, हम आपके ग्राहकों को कॉल नहीं करते।",
+ st1:"स्टोर जोड़ें", st2:"भाषा", st3:"आवाज़", st4:"टेस्ट कॉल",
+ ob1_h:"आपके ऑर्डर कहाँ से आते हैं?", ob1_p:"हम यहाँ से नए COD ऑर्डर पढ़कर हर ग्राहक को कॉल करेंगे।",
+ shopify:"Shopify स्टोर", shopify_p:"एक क्लिक। नए ऑर्डर अपने आप आएँगे।", excel:"Excel / Google Sheet", excel_p:"ऑर्डर की शीट अपलोड करें। किसी भी वेबसाइट के साथ चलेगा।",
+ connect:"जोड़ें", connected:"जुड़ गया", sheet_cols:"शीट में ये कॉलम होने चाहिए:",
+ ob2_h:"कॉल किस भाषा में हो?", ob2_p:"अगर ग्राहक किसी और भाषा में बोले, तो एजेंट अपने आप बदल जाएगा।",
+ hinglish:"हिंग्लिश", hinglish_p:"हिंदी + इंग्लिश, जैसे ज़्यादातर ग्राहक बोलते हैं", hindi:"हिंदी", hindi_p:"शुद्ध हिंदी", english:"इंग्लिश", english_p:"इंडियन इंग्लिश",
+ recommended:"सुझाव", soon:"जल्द आ रहा है",
+ ob3_h:"अपने ब्रांड के लिए आवाज़ चुनें", ob3_p:"हर आवाज़ सुनने के लिए प्ले दबाएँ। बाद में कभी भी बदल सकते हैं।",
+ ob4_h:"टेस्ट कॉल पर सुनें", ob4_p:"ग्राहक बनकर हर जवाब आज़माएँ। असली ग्राहकों को कुछ नहीं जाएगा।",
+ test_phone:"आपका नंबर", run_test:"टेस्ट कॉल शुरू करें", go_live:"लाइव करें",
+ nav_dash:"डैशबोर्ड", nav_calls:"कॉल्स", nav_script:"कॉल स्क्रिप्ट", nav_settings:"सेटिंग्स", nav_wallet:"वॉलेट",
+ live:"लाइव · नए COD ऑर्डर पर कॉल चालू",
+ dash_h:"नमस्ते, Kesar Kurtis", dash_p:"आज आपकी कॉल्स ने क्या किया।",
+ saved_month:"इस महीने बचा RTO खर्च", saved_note:"293 ऑर्डर शिप से पहले कैंसल × ₹160 आने-जाने की शिपिंग",
+ k_calls:"आज की कॉल्स", k_conf:"कन्फ़र्म", k_canc:"कैंसल", k_pend:"नहीं उठाया / बाद में",
+ vs_yday:"कल के मुकाबले", of_calls:"कॉल्स का",
+ chart_h:"पिछले 7 दिन", table_view:"टेबल", chart_view:"चार्ट",
+ attn_h:"इन पर ध्यान दें",
+ a1:"3 ग्राहकों ने पता बदलने को कहा", a1s:"शिप करने से पहले Shopify में अपडेट करें",
+ a2:"5 कॉलबैक तय हैं", a2s:"अगली आज शाम 7:00 बजे",
+ a3:"वॉलेट ~4 दिन चलेगा", a3s:"₹1,840 बाकी · कॉल चालू रखने के लिए रिचार्ज करें",
+ calls_h:"कॉल्स", calls_p:"हर कॉल, रिकॉर्डिंग और ग्राहक ने क्या कहा।",
+ f_all:"सभी", search:"नाम, ऑर्डर या शहर खोजें",
+ c_time:"समय", c_order:"ऑर्डर", c_cust:"ग्राहक", c_amount:"रकम", c_result:"नतीजा", c_try:"कोशिश",
+ o_confirmed:"कन्फ़र्म", o_cancelled:"कैंसल", o_callback:"बाद में कॉल", o_noanswer:"नहीं उठाया",
+ d_play:"रिकॉर्डिंग सुनें", d_stop:"रोकें", d_transcript:"क्या बात हुई", d_tag:"Shopify टैग", d_reason:"कैंसल की वजह", d_attempts:"कोशिशें", d_dur:"समय", d_city:"शहर",
+ script_h:"कॉल स्क्रिप्ट", script_p:"एजेंट क्या बोलेगा, अपने शब्दों में लिखें। कोई फ़्लोचार्ट नहीं।",
+ sc_greet:"1. पहली लाइन", sc_greet_h:"एजेंट सबसे पहले यही बोलेगा और ऑर्डर कन्फ़र्म करने को कहेगा।",
+ sc_yes:"अगर ग्राहक हाँ कहे", sc_addr:"पता कन्फ़र्म करें", sc_close_ok:"धन्यवाद वाली लाइन",
+ sc_no:"अगर ग्राहक ना कहे", sc_reason:"कैंसल की वजह पूछें", sc_close_no:"आख़िरी लाइन",
+ sc_later:"अगर ग्राहक बिज़ी हो", sc_later_l:"पूछें कब कॉल करें",
+ sc_vars:"डालने के लिए टैप करें:", save:"स्क्रिप्ट सेव करें", test_call:"टेस्ट कॉल करें",
+ preview:"लाइव प्रीव्यू", preview_ctx:"सैंपल ऑर्डर: Priya Sharma · Cotton Anarkali Kurti · ₹1,299",
+ agent_says:"एजेंट बोलेगा",
+ set_h:"सेटिंग्स", set_p:"कॉल कब और कैसे जाएँ।",
+ set_when:"कॉल का समय", st_delay:"ऑर्डर के कितनी देर बाद कॉल", st_from:"कब से", st_to:"कब तक", st_retry:"न उठे तो दोबारा कोशिश", st_gap:"कोशिशों के बीच का समय",
+ set_voice:"आवाज़ और भाषा", set_store:"ऑर्डर कहाँ से आते हैं", set_rto:"हर ऑर्डर का RTO खर्च", set_rto_h:"बची रकम का हिसाब इसी से होता है",
+ set_wa:"कॉल न उठे तो WhatsApp भेजें", set_wa_h:"अगले वर्ज़न में आएगा",
+ wal_h:"वॉलेट", wal_p:"प्रीपेड। सिर्फ़ उन कॉल्स का पैसा जो ग्राहक उठाए।",
+ wal_bal:"बैलेंस", wal_rate:"हर उठाई गई कॉल ₹3 (1 मिनट तक) · न उठी कॉल फ़्री",
+ wal_add:"पैसे जोड़ें", wal_pay:"UPI से पे करें", wal_hist:"हाल की गतिविधि",
+ saved_t:"सेव हो गया। अगली कॉल से नई सेटिंग लागू होगी।",
+ script_saved:"स्क्रिप्ट सेव हो गई। अगली कॉल इसी से होगी।",
+ golive_t:"आप लाइव हैं! नए COD ऑर्डर पर 5 मिनट बाद कॉल जाएगी।",
+ paid_t:"₹{a} वॉलेट में जुड़ गए (प्रोटोटाइप, असली पेमेंट नहीं)।",
+ sim_live:"टेस्ट कॉल · चल रही है", sim_ended:"कॉल ख़त्म", sim_reply:"ग्राहक बनकर जवाब दें", voice_on:"आवाज़ चालू", voice_off:"आवाज़ बंद",
+ sim_result:"ये कॉल आपकी कॉल्स लिस्ट में ऐसे दिखेगी", again:"दोबारा करें", close:"बंद करें"
+}};
+var lang = "en";
+try{ var sl = localStorage.getItem("haanji-lang"); if(sl==="hi"||sl==="en") lang = sl; }catch(e){}
+function t(k){ return (T[lang] && T[lang][k]) || T.en[k] || k; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+function $(id){ return document.getElementById(id); }
+function rupee(n){ return "₹" + n.toLocaleString("en-IN"); }
+
+/* ---------- state ---------- */
+var S = {
+  view:"signup", page:"dash", step:0, otpSent:false,
+  source:null, shopConnected:false, sheetMsg:"",
+  lang:"hinglish", voice:"ananya", testDone:false,
+  filter:"all", q:"", chartTable:false,
+  balance:1840, amt:2000,
+  settings:{delay:"5", from:"09:00", to:"21:00", retries:"3", gap:"2", rto:160},
+  script:{
+    greet:"Namaste {name} ji, main {brand} se {agent} bol rahi hoon. Aapne {amount} ka {product} order kiya hai, cash on delivery. Kya hum ise ship kar dein?",
+    addrOn:true, addr:"Bahut badhiya! Aapka delivery address hai: {address}. Kya ye sahi hai?",
+    closeOk:"Dhanyavaad {name} ji! Aapka order 2-3 din mein pahunch jayega.",
+    reasonOn:true, reason:"Koi baat nahi. Kya aap bata sakte hain ki cancel kyun karna hai?",
+    closeNo:"Samajh gayi. Aapka order cancel kar diya gaya hai. Dhanyavaad!",
+    later:"Bilkul, koi baat nahi. Aapko kab call karein?"
+  }
+};
+var VOICES = [
+  {id:"ananya", name:"Ananya", g:"f", d:{en:"Warm, friendly",hi:"गर्मजोशी भरी, दोस्ताना"}, pitch:1.15, rate:1},
+  {id:"meera", name:"Meera", g:"f", d:{en:"Calm, professional",hi:"शांत, प्रोफ़ेशनल"}, pitch:1.0, rate:.92},
+  {id:"rohit", name:"Rohit", g:"m", d:{en:"Confident, clear",hi:"भरोसेमंद, साफ़"}, pitch:.8, rate:1},
+  {id:"kabir", name:"Kabir", g:"m", d:{en:"Young, energetic",hi:"युवा, जोशीला"}, pitch:.9, rate:1.1}
+];
+var SAMPLE = {name:"Priya", full:"Priya Sharma", brand:"Kesar Kurtis", amount:"₹1,299", product:"Cotton Anarkali Kurti", address:"B-24, Malviya Nagar, Jaipur 302017"};
+function voice(){ return VOICES.filter(function(v){return v.id===S.voice;})[0]; }
+function fill(tpl, o){
+  o = o || SAMPLE; var v = voice();
+  var s = tpl.replace(/\{name\}/g,o.name).replace(/\{brand\}/g,SAMPLE.brand).replace(/\{agent\}/g,v.name)
+    .replace(/\{amount\}/g,o.amount).replace(/\{product\}/g,o.product).replace(/\{address\}/g,o.address);
+  if(v.g==="m"){ s = s.replace(/rahi hoon/g,"raha hoon").replace(/karungi/g,"karunga").replace(/Samajh gayi/g,"Samajh gaya"); }
+  return s;
+}
+
+/* ---------- sample calls ---------- */
+var PEOPLE = [
+ ["Priya Sharma","Jaipur","302017"],["Rahul Verma","Lucknow","226010"],["Sneha Patil","Pune","411038"],["Aman Gupta","Indore","452001"],
+ ["Fatima Khan","Bhopal","462016"],["Karthik R","Chennai","600040"],["Neha Joshi","Dehradun","248001"],["Simran Kaur","Ludhiana","141001"],
+ ["Arjun Nair","Kochi","682020"],["Pooja Yadav","Patna","800001"],["Ritu Agarwal","Kanpur","208002"],["Imran Sheikh","Nagpur","440010"],
+ ["Divya Menon","Bengaluru","560034"],["Ankit Mishra","Varanasi","221005"],["Kavya Reddy","Hyderabad","500081"],["Sanjay Thakur","Shimla","171001"],
+ ["Meghna Das","Kolkata","700029"],["Vikas Chauhan","Meerut","250001"],["Anjali Singh","Gorakhpur","273001"],["Rohan Desai","Surat","395007"],
+ ["Nisha Bansal","Chandigarh","160017"],["Farhan Ali","Aligarh","202001"],["Tanvi Kulkarni","Nashik","422005"],["Gaurav Saxena","Agra","282002"],
+ ["Shreya Iyer","Coimbatore","641002"],["Manish Rawat","Haridwar","249401"],["Ayesha Siddiqui","Hyderabad","500028"],["Deepak Jain","Udaipur","313001"],
+ ["Lata Pandey","Prayagraj","211001"],["Harpreet Gill","Amritsar","143001"],["Sonal Mehta","Ahmedabad","380015"],["Vivek Tiwari","Raipur","492001"]
+];
+var PRODUCTS = [["Cotton Anarkali Kurti",1299],["Chikankari Kurta Set",2149],["Block Print Dupatta",649],["Rayon Straight Kurti",899],["Festive Lehenga Skirt",3499],["Printed Palazzo",749]];
+var OUTCOMES = ["confirmed","confirmed","confirmed","noanswer","confirmed","cancelled","confirmed","confirmed","callback","confirmed","confirmed","confirmed","noanswer","confirmed","cancelled","confirmed","confirmed","confirmed","confirmed","noanswer","confirmed","cancelled","confirmed","confirmed","callback","confirmed","confirmed","confirmed","noanswer","confirmed","confirmed","cancelled"];
+var REASONS = ["Ordered by mistake","Found it cheaper elsewhere","Delivery takes too long","Ordered by mistake"];
+var CALLS = PEOPLE.map(function(p,i){
+  var pr = PRODUCTS[(i*5+2)%PRODUCTS.length], oc = OUTCOMES[i];
+  var mins = 18*60+42 - i*11, h = Math.floor(mins/60), m = mins%60;
+  var hh = h>12?h-12:h, ap = h>=12?"PM":"AM";
+  var o = {name:p[0].split(" ")[0], amount:rupee(pr[1]), product:pr[0], address:"House "+(12+i*3)+", "+p[1]+" "+p[2]};
+  return {
+    id:"KK" + (2148 - i), name:p[0], city:p[1], o:o, amount:pr[1], product:pr[0], outcome:oc,
+    time:hh+":"+(m<10?"0":"")+m+" "+ap,
+    tries: oc==="noanswer"?3:(i%4===1?2:1),
+    dur: oc==="noanswer"?"—":"0:"+(oc==="confirmed"?(28+(i*7)%22):(40+(i*5)%15)),
+    reason: oc==="cancelled"?REASONS[i%REASONS.length]:"",
+    addrChange: oc==="confirmed" && (i===6||i===16||i===26)
+  };
+});
+function transcript(c){
+  var L = [];
+  if(c.outcome==="noanswer") return L;
+  L.push(["bot",fill(S.script.greet,c.o)]);
+  if(c.outcome==="confirmed"){
+    L.push(["cust","Haan ji, bhej dijiye."]);
+    if(S.script.addrOn){
+      L.push(["bot",fill(S.script.addr,c.o)]);
+      if(c.addrChange){ L.push(["cust","Nahi, naya address likh lijiye: Flat 7, Vaishali Nagar."]); L.push(["bot","Dhanyavaad, maine note kar liya. Team address update kar degi."]); }
+      else L.push(["cust","Haan, sahi hai."]);
+    }
+    L.push(["bot",fill(S.script.closeOk,c.o)]);
+  } else if(c.outcome==="cancelled"){
+    L.push(["cust","Nahi, cancel kar dijiye."]);
+    if(S.script.reasonOn){ L.push(["bot",fill(S.script.reason,c.o)]); L.push(["cust",{"Ordered by mistake":"Galti se order ho gaya tha.","Found it cheaper elsewhere":"Kahin aur sasta mil gaya.","Delivery takes too long":"Delivery bahut late hai."}[c.reason]]); }
+    L.push(["bot",fill(S.script.closeNo,c.o)]);
+  } else {
+    L.push(["cust","Abhi busy hoon, baad mein call kijiye."]);
+    L.push(["bot",fill(S.script.later,c.o)]);
+    L.push(["cust","Shaam 7 baje."]);
+    L.push(["bot",fill("Theek hai, main shaam 7 baje call karungi. Dhanyavaad!",c.o)]);
+  }
+  return L;
+}
+var WEEK = [
+  {d:"Tue",c:88,x:12,p:18},{d:"Wed",c:95,x:15,p:14},{d:"Thu",c:79,x:9,p:16},{d:"Fri",c:102,x:14,p:13},
+  {d:"Sat",c:110,x:18,p:21},{d:"Sun",c:84,x:16,p:15},{d:"Today",c:97,x:14,p:17}
+];
+
+/* ---------- icons ---------- */
+var IC = {
+  dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+  calls:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  script:'<path d="M4 5h16M4 10h16M4 15h10M4 20h7"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>'
+};
+function icon(k,s){ s=s||20; return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'; }
+function pill(o){ var g={confirmed:"✓",cancelled:"✕",callback:"↻",noanswer:"–"}[o]; return '<span class="pill '+o+'"><i>'+g+'</i>'+esc(t("o_"+o))+'</span>'; }
+
+/* ---------- toast ---------- */
+var toastTimer;
+function toast(msg){
+  $("toast-root").innerHTML = '<div class="toast" role="status">'+esc(msg)+'</div>';
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ $("toast-root").innerHTML=""; }, 3600);
+}
+
+/* ---------- speech ---------- */
+var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+var voiceOn = true;
+function pickVoice(){
+  if(!synth) return null;
+  var vs = []; try{ vs = synth.getVoices(); }catch(e){}
+  return vs.filter(function(v){return v.lang==="en-IN";})[0] || vs.filter(function(v){return v.lang==="hi-IN";})[0] || vs.filter(function(v){return /^en/.test(v.lang);})[0] || null;
+}
+function speak(text, onend, vid){
+  if(!synth || !voiceOn){ if(onend) setTimeout(onend, 300); return; }
+  try{
+    var v = VOICES.filter(function(x){return x.id===(vid||S.voice);})[0];
+    var u = new SpeechSynthesisUtterance(text);
+    var bv = pickVoice(); if(bv){ u.voice = bv; u.lang = bv.lang; } else u.lang = "en-IN";
+    u.pitch = v.pitch; u.rate = v.rate;
+    if(onend){ u.onend = onend; u.onerror = onend; }
+    synth.speak(u);
+  }catch(e){ if(onend) onend(); }
+}
+function hush(){ try{ if(synth) synth.cancel(); }catch(e){} }
+
+/* ---------- routing ---------- */
+var JUMPS = [["signup","Sign up"],["onboard","Setup"],["dash","nav_dash"],["calls","nav_calls"],["script","nav_script"],["settings","nav_settings"],["wallet","nav_wallet"]];
+function go(view, page){
+  hush(); closeDrawer();
+  S.view = view; if(page) S.page = page;
+  $("v-signup").hidden = view!=="signup";
+  $("v-onboard").hidden = view!=="onboard";
+  $("v-app").hidden = view!=="app";
+  if(view==="onboard") renderOnboard();
+  if(view==="app") renderApp();
+  renderJump(); window.scrollTo(0,0);
+}
+function renderJump(){
+  var cur = S.view==="app" ? S.page : S.view;
+  $("jump").innerHTML = JUMPS.map(function(j){
+    var lbl = j[1].indexOf("nav_")===0 ? t(j[1]) : (lang==="hi" ? (j[0]==="signup"?"साइन अप":"सेटअप") : j[1]);
+    return '<button data-j="'+j[0]+'" aria-current="'+(cur===j[0])+'">'+esc(lbl)+'</button>';
+  }).join("");
+}
+$("jump").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  var j = b.getAttribute("data-j");
+  if(j==="signup") go("signup"); else if(j==="onboard"){ S.step=0; go("onboard"); } else go("app", j);
+});
+
+/* ---------- language ---------- */
+function applyLang(){
+  document.documentElement.lang = lang==="hi" ? "hi" : "en";
+  $("lang-en").setAttribute("aria-pressed", lang==="en"); $("lang-hi").setAttribute("aria-pressed", lang==="hi");
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = t(el.getAttribute("data-t")); });
+  $("otp-btn").textContent = S.otpSent ? t("su_verify") : t("su_send");
+  renderJump();
+  if(S.view==="onboard") renderOnboard();
+  if(S.view==="app") renderApp();
+}
+function setLang(l){ lang = l; try{ localStorage.setItem("haanji-lang", l); }catch(e){} applyLang(); }
+$("lang-en").onclick = function(){ setLang("en"); };
+$("lang-hi").onclick = function(){ setLang("hi"); };
+
+/* ---------- signup ---------- */
+$("google-btn").onclick = function(){ S.step=0; go("onboard"); };
+$("otp-btn").onclick = function(){
+  if(!S.otpSent){ S.otpSent = true; $("otp-field").hidden = false; this.textContent = t("su_verify"); $("otp1").focus(); }
+  else { S.step=0; go("onboard"); }
+};
+
+/* ---------- onboarding ---------- */
+function renderOnboard(){
+  var steps = ["st1","st2","st3","st4"];
+  $("stepper").innerHTML = steps.map(function(s,i){ return '<li class="'+(i<S.step?"done":i===S.step?"on":"")+'"'+(i===S.step?' aria-current="step"':'')+'>'+esc(t(s))+'</li>'; }).join("");
+  var b = "";
+  if(S.step===0){
+    b += '<div><h2>'+esc(t("ob1_h"))+'</h2><p class="ink2" style="margin-top:6px">'+esc(t("ob1_p"))+'</p></div>';
+    b += '<div class="opts"><button class="opt" data-src="shopify" aria-pressed="'+(S.source==="shopify")+'"><span class="t">'+esc(t("shopify"))+'<span class="tag">'+esc(t("recommended"))+'</span></span><span class="ink2 small">'+esc(t("shopify_p"))+'</span></button>'+
+         '<button class="opt" data-src="excel" aria-pressed="'+(S.source==="excel")+'"><span class="t">'+esc(t("excel"))+'</span><span class="ink2 small">'+esc(t("excel_p"))+'</span></button></div>';
+    if(S.source==="shopify"){
+      if(S.shopConnected) b += '<div class="success">✓ <span>'+esc(t("connected"))+': kesarkurtis.myshopify.com · '+(lang==="hi"?"पिछले 30 दिन में 1,284 ऑर्डर, 62% COD":"1,284 orders in the last 30 days, 62% COD")+'</span></div>';
+      else b += '<div class="card stack"><div class="field"><label for="shop-url">'+(lang==="hi"?"आपके स्टोर का पता":"Your store address")+'</label><input class="input" id="shop-url" value="kesarkurtis.myshopify.com"></div><button class="btn primary" id="shop-connect" style="align-self:flex-start">'+esc(t("connect"))+' Shopify</button></div>';
+    }
+    if(S.source==="excel"){
+      b += '<div class="card stack"><div class="field"><label for="sheet">'+(lang==="hi"?"फ़ाइल चुनें (.csv या .xlsx)":"Choose a file (.csv or .xlsx)")+'</label><input class="input" type="file" id="sheet" accept=".csv,.xlsx,.xls"></div>'+
+           '<div><p class="small ink2">'+esc(t("sheet_cols"))+'</p><p class="mono" style="margin-top:4px">order_id, customer_name, phone, amount, product, address</p></div>'+
+           (S.sheetMsg?'<div class="success">✓ <span>'+esc(S.sheetMsg)+'</span></div>':'')+'</div>';
+    }
+  }
+  if(S.step===1){
+    b += '<div><h2>'+esc(t("ob2_h"))+'</h2><p class="ink2" style="margin-top:6px">'+esc(t("ob2_p"))+'</p></div><div class="opts">';
+    [["hinglish",1],["hindi",0],["english",0]].forEach(function(l){
+      b += '<button class="opt" data-lang="'+l[0]+'" aria-pressed="'+(S.lang===l[0])+'"><span class="t">'+esc(t(l[0]))+(l[1]?'<span class="tag">'+esc(t("recommended"))+'</span>':'')+'</span><span class="ink2 small">'+esc(t(l[0]+"_p"))+'</span></button>';
+    });
+    ["Tamil","Telugu","Bengali","Marathi"].forEach(function(n){ b += '<button class="opt" disabled><span class="t">'+n+'</span><span class="ink2 small">'+esc(t("soon"))+'</span></button>'; });
+    b += '</div>';
+  }
+  if(S.step===2){
+    b += '<div><h2>'+esc(t("ob3_h"))+'</h2><p class="ink2" style="margin-top:6px">'+esc(t("ob3_p"))+'</p></div><div class="opts">';
+    VOICES.forEach(function(v){
+      b += '<div class="opt voice" role="button" tabindex="0" data-voice="'+v.id+'" aria-pressed="'+(S.voice===v.id)+'"><span><span class="t">'+v.name+'</span><span class="ink2 small">'+esc(v.d[lang])+'</span></span><button class="play" data-play="'+v.id+'" aria-label="Play '+v.name+'"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg></button></div>';
+    });
+    b += '</div><p class="small muted">'+(lang==="hi"?"प्रोटोटाइप में ब्राउज़र की आवाज़ है। असली प्रोडक्ट में नेचुरल AI आवाज़ होगी।":"The prototype uses your browser's built-in voice. The real product uses natural AI voices.")+'</p>';
+  }
+  if(S.step===3){
+    b += '<div><h2>'+esc(t("ob4_h"))+'</h2><p class="ink2" style="margin-top:6px">'+esc(t("ob4_p"))+'</p></div>'+
+         '<div class="card stack"><div class="field"><label for="test-phone">'+esc(t("test_phone"))+'</label><input class="input num" id="test-phone" value="+91 98290 41122"></div>'+
+         '<button class="btn" id="ob-test" style="align-self:flex-start">'+icon("calls",18)+esc(t("run_test"))+'</button>'+
+         (S.testDone?'<div class="success">✓ <span>'+(lang==="hi"?"टेस्ट कॉल पूरी हुई। अब आप लाइव हो सकते हैं।":"Test call done. You're ready to go live.")+'</span></div>':'')+'</div>';
+  }
+  $("ob-body").innerHTML = b;
+  $("ob-back").style.visibility = S.step===0 ? "hidden" : "visible";
+  $("ob-next").textContent = S.step===3 ? t("go_live") : t("next");
+  $("ob-next").disabled = S.step===0 && !(S.shopConnected || S.sheetMsg);
+}
+$("ob-body").addEventListener("click", function(e){
+  var el;
+  if((el = e.target.closest("[data-play]"))){ e.stopPropagation(); hush(); S.voice = el.getAttribute("data-play"); speak(fill(S.script.greet), null, S.voice); renderOnboard(); return; }
+  if((el = e.target.closest("[data-src]"))){ S.source = el.getAttribute("data-src"); renderOnboard(); return; }
+  if((el = e.target.closest("[data-lang]"))){ S.lang = el.getAttribute("data-lang"); renderOnboard(); return; }
+  if((el = e.target.closest("[data-voice]"))){ S.voice = el.getAttribute("data-voice"); renderOnboard(); return; }
+  if(e.target.closest("#shop-connect")){ S.shopConnected = true; renderOnboard(); return; }
+  if(e.target.closest("#ob-test")){ openSim(function(){ S.testDone = true; if(S.view==="onboard") renderOnboard(); }); }
+});
+$("ob-body").addEventListener("keydown", function(e){
+  var el = e.target.closest("[data-voice]");
+  if(el && e.target===el && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); S.voice = el.getAttribute("data-voice"); renderOnboard(); }
+});
+$("ob-body").addEventListener("change", function(e){
+  if(e.target.id!=="sheet" || !e.target.files || !e.target.files[0]) return;
+  var f = e.target.files[0];
+  if(/\.csv$/i.test(f.name)){
+    var r = new FileReader();
+    r.onload = function(){ var n = String(r.result).split(/\r?\n/).filter(function(x){return x.trim();}).length - 1; S.sheetMsg = f.name+" · "+Math.max(n,0)+(lang==="hi"?" ऑर्डर मिले":" orders found"); renderOnboard(); };
+    r.readAsText(f);
+  } else { S.sheetMsg = f.name+(lang==="hi"?" · अपलोड हो गई":" · uploaded"); renderOnboard(); }
+});
+$("ob-back").onclick = function(){ if(S.step>0){ S.step--; hush(); renderOnboard(); } };
+$("ob-next").onclick = function(){
+  hush();
+  if(S.step<3){ S.step++; renderOnboard(); }
+  else { go("app","dash"); toast(t("golive_t")); }
+};
+
+/* ---------- app shell ---------- */
+function renderApp(){
+  $("nav").innerHTML = ["dash","calls","script","settings","wallet"].map(function(p){
+    return '<button data-p="'+p+'"'+(S.page===p?' aria-current="page"':'')+'>'+icon(p)+'<span>'+esc(t("nav_"+p))+'</span></button>';
+  }).join("");
+  var c = $("content");
+  if(S.page==="dash") c.innerHTML = viewDash();
+  if(S.page==="calls") c.innerHTML = viewCalls();
+  if(S.page==="script") c.innerHTML = viewScript();
+  if(S.page==="settings") c.innerHTML = viewSettings();
+  if(S.page==="wallet") c.innerHTML = viewWallet();
+  if(S.page==="dash" && !S.chartTable) bindChart();
+  if(S.page==="script") updatePreview();
+}
+$("nav").addEventListener("click", function(e){ var b = e.target.closest("button"); if(b) go("app", b.getAttribute("data-p")); });
+function walletChip(){ return '<button class="wallet-chip" data-goto="wallet">'+icon("wallet",18)+'<b class="num">'+rupee(S.balance)+'</b><span class="muted small">≈ '+Math.floor(S.balance/3)+(lang==="hi"?" कॉल":" calls")+'</span></button>'; }
+
+/* ---------- dashboard ---------- */
+function viewDash(){
+  var tot = 128, conf = 97, canc = 14, pend = 17;
+  var h = '<div class="head"><div><h2>'+esc(t("dash_h"))+'</h2><p>'+esc(t("dash_p"))+'</p></div>'+walletChip()+'</div>';
+  h += '<section class="hero"><div class="saved"><span class="lbl">'+esc(t("saved_month"))+'</span><span class="big">'+rupee(293*S.settings.rto)+'</span><p>'+esc(t("saved_note").replace("₹160",rupee(S.settings.rto)))+'</p></div><div class="tiles">'+
+    tile(t("k_calls"),tot,"+9 "+t("vs_yday"),null)+
+    tile(t("k_conf"),conf,Math.round(conf/tot*100)+"% "+t("of_calls"),"var(--s-good)")+
+    tile(t("k_canc"),canc,rupee(canc*S.settings.rto)+(lang==="hi"?" बचे":" saved"),"var(--s-crit)")+
+    tile(t("k_pend"),pend,(lang==="hi"?"दोबारा कोशिश चालू":"retrying automatically"),"var(--s-none)")+
+    '</div></section>';
+  h += '<div class="grid2"><section class="card"><div class="card-head"><h3>'+esc(t("chart_h"))+'</h3><div class="row"><div class="legend"><span><i style="background:var(--s-good)"></i>'+esc(t("o_confirmed"))+'</span><span><i style="background:var(--s-crit)"></i>'+esc(t("o_cancelled"))+'</span><span><i style="background:var(--s-none)"></i>'+esc(t("k_pend"))+'</span></div>'+
+       '<button class="chip" id="chart-toggle">'+esc(S.chartTable?t("chart_view"):t("table_view"))+'</button></div></div>'+(S.chartTable?weekTable():'<div class="chart-wrap" id="chart">'+chartSVG()+'</div>')+'</section>';
+  h += '<section class="card"><div class="card-head"><h3>'+esc(t("attn_h"))+'</h3></div><div class="attn">'+
+       attn("var(--warn-bg)","var(--warn-text)","3",t("a1"),t("a1s"),"calls")+
+       attn("var(--brand-soft)","var(--brand-text)","5",t("a2"),t("a2s"),"calls")+
+       attn("var(--marigold-soft)","var(--marigold-ink)","₹",t("a3"),t("a3s"),"wallet")+'</div></section></div>';
+  h += '<section class="stack" style="gap:12px"><div class="card-head" style="margin:0"><h3>'+(lang==="hi"?"हाल की कॉल्स":"Latest calls")+'</h3><button class="btn ghost" data-goto="calls">'+(lang==="hi"?"सभी कॉल्स देखें →":"See all calls →")+'</button></div>'+callsTable(CALLS.slice(0,5))+'</section>';
+  return h;
+}
+function tile(k,v,d,color){ return '<div class="tile"><span class="k">'+(color?'<i style="background:'+color+'"></i>':'')+esc(k)+'</span><span class="v">'+v+'</span><span class="d">'+esc(d)+'</span></div>'; }
+function attn(bg,fg,g,a,s,go){ return '<button data-goto="'+go+'"><span class="dot" style="background:'+bg+';color:'+fg+'">'+g+'</span><span><strong>'+esc(a)+'</strong><span>'+esc(s)+'</span></span></button>'; }
+function weekTable(){
+  return '<div class="tbl-wrap mini-tbl"><table><thead><tr><th>'+(lang==="hi"?"दिन":"Day")+'</th><th class="r">'+esc(t("o_confirmed"))+'</th><th class="r">'+esc(t("o_cancelled"))+'</th><th class="r">'+esc(t("k_pend"))+'</th></tr></thead><tbody>'+
+    WEEK.map(function(w){ return '<tr><td>'+dayLabel(w.d)+'</td><td class="r num">'+w.c+'</td><td class="r num">'+w.x+'</td><td class="r num">'+w.p+'</td></tr>'; }).join("")+'</tbody></table></div>';
+}
+function dayLabel(d){ if(lang!=="hi") return d; return {Tue:"मंगल",Wed:"बुध",Thu:"गुरु",Fri:"शुक्र",Sat:"शनि",Sun:"रवि",Today:"आज"}[d]; }
+function chartSVG(){
+  var W=560, H=230, L=36, R=8, Tp=12, B=28, max=150, ph=H-Tp-B, pw=W-L-R, n=WEEK.length, band=pw/n, bw=24;
+  function y(v){ return Tp + ph - v/max*ph; }
+  var s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Calls by outcome, last 7 days"><g class="grid">';
+  [0,50,100,150].forEach(function(v){ if(v) s += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'"/>'; s += '<text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+v+'</text>'; });
+  s += '</g>';
+  WEEK.forEach(function(w,i){
+    var cx = L + band*i + band/2, x = cx - bw/2, base = y(0);
+    var segs = [["seg-good",w.c],["seg-crit",w.x],["seg-none",w.p]], cur = base;
+    segs.forEach(function(sg,k){
+      var hgt = sg[1]/max*ph, top = cur - hgt, gap = k>0 ? 2 : 0, h2 = hgt - gap, yb = cur - gap;
+      if(k===segs.length-1){
+        var r = 4; s += '<path class="'+sg[0]+'" d="M'+x+' '+yb+' V'+(top+r)+' Q'+x+' '+top+' '+(x+r)+' '+top+' H'+(x+bw-r)+' Q'+(x+bw)+' '+top+' '+(x+bw)+' '+(top+r)+' V'+yb+' Z"/>';
+      } else s += '<rect class="'+sg[0]+'" x="'+x+'" y="'+top+'" width="'+bw+'" height="'+h2+'"/>';
+      cur = top;
+    });
+    s += '<text x="'+cx+'" y="'+(H-8)+'" text-anchor="middle"'+(w.d==="Today"?' style="fill:var(--ink);font-weight:600"':'')+'>'+dayLabel(w.d)+'</text>';
+    s += '<rect class="col-hit" data-i="'+i+'" x="'+(L+band*i+2)+'" y="'+Tp+'" width="'+(band-4)+'" height="'+ph+'" rx="6" tabindex="0" aria-label="'+dayLabel(w.d)+': '+w.c+' '+t("o_confirmed")+', '+w.x+' '+t("o_cancelled")+', '+w.p+' '+t("k_pend")+'"/>';
+  });
+  s += '<line class="base" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(0)+'" y2="'+y(0)+'"/></svg><div class="tip" id="tip" hidden></div>';
+  return s;
+}
+function bindChart(){
+  var wrap = $("chart"); if(!wrap) return; var tip = $("tip");
+  function show(el){
+    var i = +el.getAttribute("data-i"), w = WEEK[i];
+    wrap.querySelectorAll(".col-hit").forEach(function(r){ r.classList.toggle("on", r===el); });
+    tip.innerHTML = '<strong>'+dayLabel(w.d)+'</strong> <span class="muted num">· '+(w.c+w.x+w.p)+(lang==="hi"?" कॉल":" calls")+'</span>'+
+      '<div class="r"><span><i style="background:var(--s-good)"></i>'+esc(t("o_confirmed"))+'</span><b class="num">'+w.c+'</b></div>'+
+      '<div class="r"><span><i style="background:var(--s-crit)"></i>'+esc(t("o_cancelled"))+'</span><b class="num">'+w.x+'</b></div>'+
+      '<div class="r"><span><i style="background:var(--s-none)"></i>'+esc(t("k_pend"))+'</span><b class="num">'+w.p+'</b></div>';
+    var wr = wrap.getBoundingClientRect(), er = el.getBoundingClientRect();
+    var left = er.left - wr.left + er.width/2; left = Math.max(90, Math.min(wr.width-90, left));
+    tip.style.left = left+"px"; tip.style.top = (er.top - wr.top + 6)+"px"; tip.hidden = false;
+  }
+  function hide(){ tip.hidden = true; wrap.querySelectorAll(".col-hit").forEach(function(r){ r.classList.remove("on"); }); }
+  wrap.querySelectorAll(".col-hit").forEach(function(r){
+    r.addEventListener("mouseenter", function(){ show(r); }); r.addEventListener("focus", function(){ show(r); });
+    r.addEventListener("click", function(){ show(r); }); r.addEventListener("blur", hide);
+  });
+  wrap.addEventListener("mouseleave", hide);
+}
+
+/* ---------- calls ---------- */
+function callsTable(rows){
+  if(!rows.length) return '<div class="card muted">'+(lang==="hi"?"कोई कॉल नहीं मिली। फ़िल्टर बदलकर देखें।":"No calls match. Try a different filter.")+'</div>';
+  return '<div class="tbl-wrap"><table><thead><tr><th>'+esc(t("c_time"))+'</th><th>'+esc(t("c_order"))+'</th><th>'+esc(t("c_cust"))+'</th><th class="r">'+esc(t("c_amount"))+'</th><th>'+esc(t("c_result"))+'</th><th class="r">'+esc(t("c_try"))+'</th></tr></thead><tbody>'+
+    rows.map(function(c){ return '<tr data-call="'+c.id+'" tabindex="0"><td class="num muted">'+c.time+'</td><td class="mono">#'+c.id+'</td><td><strong style="font-weight:600">'+esc(c.name)+'</strong> <span class="muted small">'+esc(c.city)+'</span></td><td class="r num">'+rupee(c.amount)+'</td><td>'+pill(c.outcome)+(c.addrChange?' <span class="small" style="color:var(--warn-text)">'+(lang==="hi"?"· पता बदला":"· new address")+'</span>':'')+'</td><td class="r num muted">'+c.tries+'</td></tr>'; }).join("")+
+    '</tbody></table></div>';
+}
+function filtered(){
+  var q = S.q.trim().toLowerCase();
+  return CALLS.filter(function(c){
+    if(S.filter!=="all" && c.outcome!==S.filter) return false;
+    if(q && (c.name+" "+c.id+" "+c.city).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+function viewCalls(){
+  var counts = {all:CALLS.length}; CALLS.forEach(function(c){ counts[c.outcome]=(counts[c.outcome]||0)+1; });
+  var h = '<div class="head"><div><h2>'+esc(t("calls_h"))+'</h2><p>'+esc(t("calls_p"))+'</p></div>'+walletChip()+'</div>';
+  h += '<div class="filters">'+["all","confirmed","cancelled","callback","noanswer"].map(function(f){
+    return '<button class="chip" data-f="'+f+'" aria-pressed="'+(S.filter===f)+'">'+esc(f==="all"?t("f_all"):t("o_"+f))+' <span class="num" style="opacity:.6">'+(counts[f]||0)+'</span></button>';
+  }).join("")+'<input class="input search" id="q" placeholder="'+esc(t("search"))+'" value="'+esc(S.q)+'" aria-label="'+esc(t("search"))+'"></div>';
+  h += '<div id="calls-list">'+callsTable(filtered())+'</div>';
+  return h;
+}
+$("content").addEventListener("click", function(e){
+  var el;
+  if((el = e.target.closest("[data-goto]"))){ go("app", el.getAttribute("data-goto")); return; }
+  if((el = e.target.closest("[data-call]"))){ openDrawer(el.getAttribute("data-call")); return; }
+  if((el = e.target.closest("[data-f]"))){ S.filter = el.getAttribute("data-f"); renderApp(); return; }
+  if(e.target.closest("#chart-toggle")){ S.chartTable = !S.chartTable; renderApp(); return; }
+  if((el = e.target.closest("[data-var]"))){ insertVar(el.getAttribute("data-var")); return; }
+  if(e.target.closest("#save-script")){ readScript(); toast(t("script_saved")); return; }
+  if(e.target.closest("#script-test")){ readScript(); openSim(); return; }
+  if(e.target.closest("#save-settings")){ readSettings(); toast(t("saved_t")); return; }
+  if((el = e.target.closest("[data-amt]"))){ S.amt = +el.getAttribute("data-amt"); renderApp(); return; }
+  if(e.target.closest("#pay")){ S.balance += S.amt; toast(t("paid_t").replace("{a}", S.amt.toLocaleString("en-IN"))); renderApp(); return; }
+});
+$("content").addEventListener("keydown", function(e){
+  var el = e.target.closest("[data-call]");
+  if(el && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); openDrawer(el.getAttribute("data-call")); }
+});
+$("content").addEventListener("input", function(e){
+  if(e.target.id==="q"){ S.q = e.target.value; $("calls-list").innerHTML = callsTable(filtered()); }
+  if(e.target.closest("#script-form")){ readScript(); updatePreview(); }
+});
+$("content").addEventListener("change", function(e){ if(e.target.closest("#script-form")){ readScript(); updatePreview(); } });
+
+/* ---------- drawer ---------- */
+var drawerReturn = null;
+function openDrawer(id){
+  var c = CALLS.filter(function(x){return x.id===id;})[0]; if(!c) return;
+  drawerReturn = document.activeElement;
+  var tr = transcript(c);
+  var tag = {confirmed:"cod-confirmed",cancelled:"cod-cancelled",callback:"cod-callback",noanswer:"cod-no-answer"}[c.outcome];
+  var h = '<div class="scrim" id="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h"><header><div><p class="mono muted">#'+c.id+' · '+c.time+'</p><h3 id="dr-h" style="margin-top:2px">'+esc(c.name)+'</h3><div style="margin-top:8px">'+pill(c.outcome)+'</div></div><button class="x" id="dr-x" aria-label="'+esc(t("close"))+'">✕</button></header><div class="body">';
+  h += '<dl class="kv"><dt>'+esc(t("c_order"))+'</dt><dd>'+esc(c.product)+' · '+rupee(c.amount)+' COD</dd><dt>'+esc(t("d_city"))+'</dt><dd>'+esc(c.o.address)+'</dd><dt>'+esc(t("d_attempts"))+'</dt><dd class="num">'+c.tries+'</dd><dt>'+esc(t("d_dur"))+'</dt><dd class="num">'+c.dur+'</dd><dt>'+esc(t("d_tag"))+'</dt><dd class="mono">'+tag+'</dd>'+(c.reason?'<dt>'+esc(t("d_reason"))+'</dt><dd>'+esc(c.reason)+'</dd>':'')+'</dl>';
+  if(tr.length){
+    h += '<button class="btn" id="dr-play">'+icon("calls",18)+'<span>'+esc(t("d_play"))+'</span></button>';
+    h += '<div class="stack" style="gap:10px"><h3>'+esc(t("d_transcript"))+'</h3><div class="transcript">'+tr.map(function(l){ return '<div class="bubble '+l[0]+'">'+esc(l[1])+'</div>'; }).join("")+'</div></div>';
+  } else {
+    h += '<div class="card small ink2">'+(lang==="hi"?"ग्राहक ने 3 बार फ़ोन नहीं उठाया (6:10, 6:40 और 7:40 PM)। अगले वर्ज़न में यहाँ WhatsApp मैसेज जाएगा।":"The customer didn't pick up after 3 tries (6:10, 6:40 and 7:40 PM). In the next version, a WhatsApp message goes out here.")+'</div>';
+  }
+  h += '</div></aside>';
+  $("drawer-root").innerHTML = h;
+  $("dr-x").focus();
+  $("dr-x").onclick = closeDrawer; $("scrim").onclick = closeDrawer;
+  var pb = $("dr-play");
+  if(pb) pb.onclick = function(){
+    if(pb.getAttribute("data-on")){ hush(); pb.removeAttribute("data-on"); pb.querySelector("span").textContent = t("d_play"); return; }
+    pb.setAttribute("data-on","1"); pb.querySelector("span").textContent = t("d_stop");
+    var i = 0; (function nxt(){ if(i>=tr.length || !pb.getAttribute("data-on")){ pb.removeAttribute("data-on"); pb.querySelector("span").textContent = t("d_play"); return; } var l = tr[i++]; speak(l[1], nxt, l[0]==="cust" ? (voice().g==="f"?"rohit":"ananya") : S.voice); })();
+  };
+}
+function closeDrawer(){ if(!$("drawer-root").innerHTML) return; hush(); $("drawer-root").innerHTML = ""; if(drawerReturn && drawerReturn.focus) try{ drawerReturn.focus(); }catch(e){} }
+document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ if($("sim-root").innerHTML) closeSim(); else closeDrawer(); } });
+
+/* ---------- script editor ---------- */
+var lastField = "sc-greet";
+function ta(id,val,lbl,hint){ return '<div class="field"><label for="'+id+'">'+esc(lbl)+'</label>'+(hint?'<span class="hint">'+esc(hint)+'</span>':'')+'<textarea class="input" id="'+id+'">'+esc(val)+'</textarea></div>'; }
+function sw(id,on,lbl){ return '<div class="branch-h"><span class="lbl">'+esc(lbl)+'</span><label class="switch"><input type="checkbox" id="'+id+'"'+(on?" checked":"")+' aria-label="'+esc(lbl)+'"><span></span></label></div>'; }
+function viewScript(){
+  var sc = S.script;
+  var vars = ["{name}","{brand}","{agent}","{amount}","{product}","{address}"];
+  var h = '<div class="head"><div><h2>'+esc(t("script_h"))+'</h2><p>'+esc(t("script_p"))+'</p></div><div class="row"><button class="btn" id="script-test">'+icon("calls",18)+esc(t("test_call"))+'</button><button class="btn primary" id="save-script">'+esc(t("save"))+'</button></div></div>';
+  h += '<div class="editor"><form class="card stack" id="script-form" style="gap:24px">';
+  h += '<div class="stack" style="gap:8px"><span class="small ink2">'+esc(t("sc_vars"))+'</span><div class="vars">'+vars.map(function(v){ return '<button type="button" data-var="'+v+'">'+v+'</button>'; }).join("")+'</div></div>';
+  h += ta("sc-greet",sc.greet,t("sc_greet"),t("sc_greet_h"));
+  h += '<div class="branch good"><h3 style="font-size:16px">'+esc(t("sc_yes"))+'</h3>'+sw("sc-addr-on",sc.addrOn,t("sc_addr"))+'<div id="addr-wrap"'+(sc.addrOn?'':' hidden')+'>'+ta("sc-addr",sc.addr,t("sc_addr"))+'</div>'+ta("sc-close-ok",sc.closeOk,t("sc_close_ok"))+'</div>';
+  h += '<div class="branch crit"><h3 style="font-size:16px">'+esc(t("sc_no"))+'</h3>'+sw("sc-reason-on",sc.reasonOn,t("sc_reason"))+'<div id="reason-wrap"'+(sc.reasonOn?'':' hidden')+'>'+ta("sc-reason",sc.reason,t("sc_reason"))+'</div>'+ta("sc-close-no",sc.closeNo,t("sc_close_no"))+'</div>';
+  h += '<div class="branch warn"><h3 style="font-size:16px">'+esc(t("sc_later"))+'</h3>'+ta("sc-later",sc.later,t("sc_later_l"))+'</div>';
+  h += '</form><aside class="phone" aria-live="polite"><h3>'+esc(t("preview"))+'</h3><p class="ctx">'+esc(t("preview_ctx"))+' · '+(lang==="hi"?"आवाज़":"Voice")+': '+voice().name+'</p><div id="preview" class="stack" style="gap:8px"></div></aside></div>';
+  return h;
+}
+function readScript(){
+  if(!$("sc-greet")) return;
+  var sc = S.script;
+  sc.greet = $("sc-greet").value; sc.addrOn = $("sc-addr-on").checked; sc.addr = $("sc-addr").value; sc.closeOk = $("sc-close-ok").value;
+  sc.reasonOn = $("sc-reason-on").checked; sc.reason = $("sc-reason").value; sc.closeNo = $("sc-close-no").value; sc.later = $("sc-later").value;
+  $("addr-wrap").hidden = !sc.addrOn; $("reason-wrap").hidden = !sc.reasonOn;
+}
+function updatePreview(){
+  var p = $("preview"); if(!p) return; var sc = S.script;
+  var h = '<div class="bubble bot">'+esc(fill(sc.greet))+'</div><p class="say" style="color:var(--good-text)">'+esc(t("sc_yes"))+'</p><div class="bubble cust">Haan ji</div>';
+  if(sc.addrOn) h += '<div class="bubble bot">'+esc(fill(sc.addr))+'</div>';
+  h += '<div class="bubble bot">'+esc(fill(sc.closeOk))+'</div><p class="say" style="color:var(--crit-text)">'+esc(t("sc_no"))+'</p><div class="bubble cust">Nahi, cancel</div>';
+  if(sc.reasonOn) h += '<div class="bubble bot">'+esc(fill(sc.reason))+'</div>';
+  h += '<div class="bubble bot">'+esc(fill(sc.closeNo))+'</div>';
+  p.innerHTML = h;
+}
+$("content").addEventListener("focusin", function(e){ if(e.target.tagName==="TEXTAREA" && e.target.closest("#script-form")) lastField = e.target.id; });
+function insertVar(v){
+  var el = $(lastField) || $("sc-greet"); if(!el) return;
+  var s = el.selectionStart != null ? el.selectionStart : el.value.length, en = el.selectionEnd != null ? el.selectionEnd : s;
+  el.value = el.value.slice(0,s) + v + el.value.slice(en); el.focus(); el.selectionStart = el.selectionEnd = s + v.length;
+  readScript(); updatePreview();
+}
+
+/* ---------- settings ---------- */
+function sel(id,val,opts){ return '<select class="input" id="'+id+'">'+opts.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===val?" selected":"")+'>'+esc(o[1])+'</option>'; }).join("")+'</select>'; }
+function viewSettings(){
+  var st = S.settings, hi = lang==="hi";
+  var hours = []; for(var i=7;i<=22;i++){ var v=(i<10?"0":"")+i+":00"; hours.push([v,(i>12?i-12:i)+":00 "+(i>=12?"PM":"AM")]); }
+  var h = '<div class="head"><div><h2>'+esc(t("set_h"))+'</h2><p>'+esc(t("set_p"))+'</p></div><button class="btn primary" id="save-settings">'+(hi?"सेव करें":"Save changes")+'</button></div>';
+  h += '<section class="card stack"><h3>'+esc(t("set_when"))+'</h3><div class="form-grid">'+
+    '<div class="field"><label for="st-delay">'+esc(t("st_delay"))+'</label>'+sel("st-delay",st.delay,[["2",hi?"2 मिनट":"2 minutes"],["5",hi?"5 मिनट":"5 minutes"],["15",hi?"15 मिनट":"15 minutes"],["60",hi?"1 घंटा":"1 hour"]])+'</div>'+
+    '<div class="field"><label for="st-from">'+esc(t("st_from"))+'</label>'+sel("st-from",st.from,hours)+'</div>'+
+    '<div class="field"><label for="st-to">'+esc(t("st_to"))+'</label>'+sel("st-to",st.to,hours)+'</div>'+
+    '<div class="field"><label for="st-retries">'+esc(t("st_retry"))+'</label>'+sel("st-retries",st.retries,[["1",hi?"1 बार":"1 time"],["2",hi?"2 बार":"2 times"],["3",hi?"3 बार":"3 times"]])+'</div>'+
+    '<div class="field"><label for="st-gap">'+esc(t("st_gap"))+'</label>'+sel("st-gap",st.gap,[["0.5",hi?"30 मिनट":"30 minutes"],["1",hi?"1 घंटा":"1 hour"],["2",hi?"2 घंटे":"2 hours"],["4",hi?"4 घंटे":"4 hours"]])+'</div>'+
+    '</div><p class="small muted">'+(hi?"रात 9 बजे के बाद आए ऑर्डर पर अगली सुबह कॉल होगी।":"Orders placed after calling hours get a call the next morning.")+'</p></section>';
+  h += '<section class="card stack"><h3>'+esc(t("set_voice"))+'</h3><div class="form-grid">'+
+    '<div class="field"><label for="st-lang">'+esc(t("st2"))+'</label>'+sel("st-lang",S.lang,[["hinglish",t("hinglish")],["hindi",t("hindi")],["english",t("english")]])+'</div>'+
+    '<div class="field"><label for="st-voice">'+esc(t("st3"))+'</label>'+sel("st-voice",S.voice,VOICES.map(function(v){return [v.id,v.name+" · "+v.d[lang]];}))+'</div></div></section>';
+  h += '<section class="card"><h3 style="margin-bottom:6px">'+esc(t("set_store"))+'</h3>'+
+    '<div class="set-row"><div><strong>Shopify</strong><p class="small muted">kesarkurtis.myshopify.com</p></div><span class="live">'+esc(t("connected"))+'</span></div>'+
+    '<div class="set-row"><div><strong>Excel / Google Sheet</strong><p class="small muted">'+(hi?"दूसरी वेबसाइट या WhatsApp के ऑर्डर के लिए":"For orders from another website or WhatsApp")+'</p></div><button class="btn">'+(hi?"शीट अपलोड करें":"Upload sheet")+'</button></div>'+
+    '<div class="set-row"><div><strong>'+esc(t("set_wa"))+'</strong><p class="small muted">'+esc(t("set_wa_h"))+'</p></div><label class="switch"><input type="checkbox" disabled aria-label="'+esc(t("set_wa"))+'"><span></span></label></div></section>';
+  h += '<section class="card stack"><div class="field" style="max-width:280px"><label for="st-rto">'+esc(t("set_rto"))+'</label><span class="hint">'+esc(t("set_rto_h"))+'</span><div class="row" style="flex-wrap:nowrap"><span class="input" style="width:auto;flex:none;display:flex;align-items:center">₹</span><input class="input num" id="st-rto" inputmode="numeric" value="'+st.rto+'"></div></div></section>';
+  return h;
+}
+function readSettings(){
+  var st = S.settings;
+  st.delay = $("st-delay").value; st.from = $("st-from").value; st.to = $("st-to").value; st.retries = $("st-retries").value; st.gap = $("st-gap").value;
+  var r = parseInt($("st-rto").value.replace(/\D/g,""),10); if(r>0) st.rto = r;
+  S.lang = $("st-lang").value; S.voice = $("st-voice").value;
+}
+
+/* ---------- wallet ---------- */
+function qrSVG(){
+  var s = '<svg class="qr" viewBox="0 0 21 21" aria-label="Sample QR code" shape-rendering="crispEdges">', seed = 7;
+  function rnd(){ seed = (seed*9301+49297)%233280; return seed/233280; }
+  for(var y=0;y<21;y++) for(var x=0;x<21;x++){
+    var f = (x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);
+    var on = f ? ((x%14===0||x%14===6||y%14===0||y%14===6)||(x%14>=2&&x%14<=4&&y%14>=2&&y%14<=4)) : rnd()>.5;
+    if(on) s += '<rect x="'+x+'" y="'+y+'" width="1" height="1" style="fill:var(--ink)"/>';
+  }
+  return s + '</svg>';
+}
+function viewWallet(){
+  var hi = lang==="hi";
+  var h = '<div class="head"><div><h2>'+esc(t("wal_h"))+'</h2><p>'+esc(t("wal_p"))+'</p></div></div>';
+  h += '<div class="grid2"><section class="card stack"><span class="lbl ink2">'+esc(t("wal_bal"))+'</span><span class="balance">'+rupee(S.balance)+'</span><p class="ink2">≈ '+Math.floor(S.balance/3)+(hi?" कॉल बाकी":" calls left")+' · '+esc(t("wal_rate"))+'</p>'+
+       '<h3 style="margin-top:8px">'+esc(t("wal_add"))+'</h3><div class="amts">'+[500,1000,2000,5000].map(function(a){ return '<button data-amt="'+a+'" aria-pressed="'+(S.amt===a)+'">'+rupee(a)+'<br><span class="small muted" style="font-weight:400">≈ '+Math.floor(a/3)+(hi?" कॉल":" calls")+'</span></button>'; }).join("")+'</div>'+
+       '<div class="upi">'+qrSVG()+'<div class="stack" style="gap:8px"><strong>'+esc(t("wal_pay"))+' · '+rupee(S.amt)+'</strong><p class="small muted">'+(hi?"किसी भी UPI ऐप से स्कैन करें। प्रोटोटाइप में असली पेमेंट नहीं होता।":"Scan with any UPI app. No real payment happens in this prototype.")+'</p><button class="btn primary" id="pay" style="align-self:flex-start">'+(hi?"पेमेंट हो गया (डेमो)":"Mark as paid (demo)")+'</button></div></div></section>';
+  h += '<section class="card"><div class="card-head"><h3>'+esc(t("wal_hist"))+'</h3></div><div class="tbl-wrap mini-tbl" style="border:0"><table><tbody>'+
+       [["Today",hi?"आज की कॉल्स":"Calls today","-₹333"],["Yesterday",hi?"कल की कॉल्स":"Calls yesterday","-₹357"],["2 Oct",hi?"UPI रिचार्ज":"UPI recharge","+₹2,000"],["1 Oct",hi?"कॉल्स":"Calls","-₹312"],["28 Sep",hi?"फ़्री ट्रायल क्रेडिट":"Free trial credit","+₹150"]].map(function(r){
+         return '<tr><td class="muted small">'+r[0]+'</td><td>'+esc(r[1])+'</td><td class="r num" style="font-weight:600;color:'+(r[2][0]==="+"?"var(--good-text)":"var(--ink)")+'">'+r[2]+'</td></tr>'; }).join("")+
+       '</tbody></table></div></section></div>';
+  return h;
+}
+
+/* ---------- call simulator ---------- */
+var simDone = null, simTimer = null, simSec = 0, simFlow = null;
+function openSim(onDone){
+  simDone = onDone || null; simSec = 0; hush();
+  var h = '<div class="sim" role="dialog" aria-modal="true" aria-labelledby="sim-h"><div class="sim-card"><div class="sim-top"><div><strong id="sim-h">'+esc(SAMPLE.brand)+' → '+esc(SAMPLE.full)+'</strong><span id="sim-status">'+esc(t("sim_live"))+' · <span class="num" id="sim-time">0:00</span></span></div><div class="row" style="gap:8px;flex-wrap:nowrap"><button class="x" id="sim-voice" aria-label="'+esc(voiceOn?t("voice_on"):t("voice_off"))+'" title="'+esc(voiceOn?t("voice_on"):t("voice_off"))+'">'+(voiceOn?"🔊":"🔇")+'</button><button class="x" id="sim-x" aria-label="'+esc(t("close"))+'">✕</button></div></div>'+
+    '<div class="sim-log" id="sim-log" aria-live="polite"></div><div class="sim-foot" id="sim-foot"></div></div></div>';
+  $("sim-root").innerHTML = h;
+  $("sim-x").onclick = closeSim; $("sim-x").focus();
+  $("sim-voice").onclick = function(){ voiceOn = !voiceOn; if(!voiceOn) hush(); this.textContent = voiceOn?"🔊":"🔇"; this.setAttribute("aria-label", voiceOn?t("voice_on"):t("voice_off")); };
+  simTimer = setInterval(function(){ simSec++; var el = $("sim-time"); if(el) el.textContent = Math.floor(simSec/60)+":"+(simSec%60<10?"0":"")+(simSec%60); }, 1000);
+  var sc = S.script;
+  simFlow = {
+    start:{say:fill(sc.greet), opts:[["Haan, bhej do","yes"],["Nahi, cancel karo","no"],["Abhi busy hoon, baad mein","later"]]},
+    yes: sc.addrOn ? {say:fill(sc.addr), opts:[["Haan, sahi hai","ok"],["Nahi, address badalna hai","chg"]]} : {say:fill(sc.closeOk), end:"confirmed"},
+    ok:{say:fill(sc.closeOk), end:"confirmed"},
+    chg:{say:"Koi baat nahi, naya address bata dijiye.", opts:[["Flat 7, Vaishali Nagar, Jaipur 302021","chg2"]]},
+    chg2:{say:fill("Dhanyavaad, maine note kar liya. "+sc.closeOk), end:"confirmed", addr:true},
+    no: sc.reasonOn ? {say:fill(sc.reason), opts:[["Galti se order ho gaya","r1"],["Kahin aur sasta mila","r1"],["Delivery bahut late hai","r1"]]} : {say:fill(sc.closeNo), end:"cancelled"},
+    r1:{say:fill(sc.closeNo), end:"cancelled"},
+    later:{say:fill(sc.later), opts:[["Shaam 7 baje","l2"],["Kal subah","l3"]]},
+    l2:{say:fill("Theek hai, main shaam 7 baje call karungi. Dhanyavaad!"), end:"callback"},
+    l3:{say:fill("Theek hai, main kal subah call karungi. Dhanyavaad!"), end:"callback"}
+  };
+  simStep("start");
+}
+function addBubble(cls, text){ var log = $("sim-log"); if(!log) return; var d = document.createElement("div"); d.className = "bubble "+cls; d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; }
+function simStep(key){
+  var node = simFlow[key], log = $("sim-log"), foot = $("sim-foot"); if(!log) return;
+  foot.innerHTML = "";
+  var ty = document.createElement("div"); ty.className = "bubble bot typing"; ty.innerHTML = "<i></i><i></i><i></i>"; log.appendChild(ty); log.scrollTop = log.scrollHeight;
+  setTimeout(function(){
+    if(!$("sim-log")) return;
+    ty.remove(); addBubble("bot", node.say); speak(node.say);
+    if(node.end){ endSim(node.end, node.addr); return; }
+    foot.innerHTML = '<span class="lbl">'+esc(t("sim_reply"))+'</span><div class="replies">'+node.opts.map(function(o){ return '<button data-next="'+o[1]+'">'+esc(o[0])+'</button>'; }).join("")+'</div>';
+    foot.querySelectorAll("[data-next]").forEach(function(b){ b.onclick = function(){ hush(); addBubble("cust", b.textContent); simStep(b.getAttribute("data-next")); }; });
+  }, 650);
+}
+function endSim(outcome, addr){
+  clearInterval(simTimer);
+  var st = $("sim-status"); if(st) st.textContent = t("sim_ended")+" · "+$("sim-time").textContent;
+  var tag = {confirmed:"cod-confirmed",cancelled:"cod-cancelled",callback:"cod-callback"}[outcome];
+  $("sim-foot").innerHTML = '<span class="lbl">'+esc(t("sim_result"))+'</span><div class="result"><div class="row" style="justify-content:space-between"><span><strong>#KK2149</strong> · Priya Sharma</span>'+pill(outcome)+'</div><p class="small ink2">'+esc(t("d_tag"))+': <span class="mono">'+tag+'</span>'+(addr?' · '+(lang==="hi"?"नया पता नोट हुआ":"new address noted"):'')+'</p></div><div class="row"><button class="btn" id="sim-again">'+esc(t("again"))+'</button><button class="btn primary" id="sim-close">'+esc(t("close"))+'</button></div>';
+  $("sim-again").onclick = function(){ var d = simDone; hush(); clearInterval(simTimer); openSim(d); };
+  $("sim-close").onclick = closeSim;
+  if(simDone){ var d = simDone; simDone = null; d(); }
+}
+function closeSim(){ hush(); clearInterval(simTimer); $("sim-root").innerHTML = ""; }
+
+/* ---------- boot ---------- */
+if(synth){ try{ synth.getVoices(); synth.onvoiceschanged = function(){}; }catch(e){} }
+applyLang();
+go("signup");
+})();
+</script>

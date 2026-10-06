@@ -1,0 +1,86 @@
+/* Colours and type from dashboard/prototype/haanji-prototype.html */
+:root {
+  --ground: #F2F5F3;
+  --surface: #FFFFFF;
+  --surface-2: #F7F9F8;
+  --ink: #13201B;
+  --ink-2: #47554F;
+  --muted: #76837E;
+  --line: #DCE3DF;
+  --line-2: #C9D2CD;
+  --brand: #0B6E5B;
+  --brand-hover: #095C4C;
+  --brand-ink: #FFFFFF;
+  --brand-soft: #DCEFE8;
+  --brand-text: #0A5D4D;
+  --marigold: #F2A20C;
+  --marigold-soft: #FFF1D2;
+  --marigold-ink: #5A3A00;
+  --s-good: #0ca30c;
+  --s-crit: #d03b3b;
+  --s-warn: #fab219;
+  --s-none: #AEB8B3;
+  --good-text: #006300;
+  --crit-text: #A82626;
+  --warn-text: #7A5300;
+  --none-text: #55625D;
+  --good-bg: #E2F4E2;
+  --crit-bg: #FBE6E6;
+  --warn-bg: #FFF2D1;
+  --none-bg: #ECEFEE;
+  --shadow: 0 1px 2px rgba(19, 32, 27, .06), 0 8px 24px rgba(19, 32, 27, .08);
+  --display: var(--font-display), var(--font-body), system-ui, sans-serif;
+  --body: var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: var(--font-mono), ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ground: #0E1412;
+    --surface: #16201C;
+    --surface-2: #1B2622;
+    --ink: #E8F0EC;
+    --ink-2: #AAB8B2;
+    --muted: #7F8D87;
+    --line: #26332E;
+    --line-2: #33423C;
+    --brand: #2DB291;
+    --brand-hover: #3CC4A2;
+    --brand-ink: #06231B;
+    --brand-soft: #123A30;
+    --brand-text: #5ED3B3;
+    --marigold: #F5B83D;
+    --marigold-soft: #3A2C0C;
+    --marigold-ink: #FFE2A6;
+    --s-none: #56635E;
+    --good-text: #4CC44C;
+    --crit-text: #F08080;
+    --warn-text: #F7C75A;
+    --none-text: #A6B3AE;
+    --good-bg: #16301A;
+    --crit-bg: #3A1A1A;
+    --warn-bg: #3A2E10;
+    --none-bg: #222C28;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; font-weight: 700; }
+h2 { font-size: 24px; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
