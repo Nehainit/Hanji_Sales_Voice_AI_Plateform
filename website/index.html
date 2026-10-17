@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HaanJi</title>
+<meta name="description" content="HaanJi calls your cash-on-delivery customers in Hindi, Hinglish or English minutes after they order, confirms the order and tags the result in Shopify. Fewer fake orders, less RTO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap">
+<style>
+/* One warm-paper editorial look on purpose (no dark theme). */
+:root{
+  color-scheme:light;
+  --bg:#F5EEEA;
+  --paper:#FFFCFA;
+  --ink:#111111;
+  --ink-2:#5C5450;
+  --muted:#7D736D;
+  --line:rgba(17,17,17,.12);
+  --good:#3E8A57; --crit:#BF4639; --warn:#B9832A; --none:#9A918B;
+  --serif:"Plus Jakarta Sans","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sans:var(--serif);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;padding-inline:20px}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:-.025em;text-wrap:balance}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:900px;margin-inline:auto}
+section{padding-block:104px;border-top:1px solid var(--line)}
+
+.eyebrow{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.head{display:flex;flex-direction:column;gap:14px;margin-bottom:52px}
+.head h2{font-size:clamp(32px,4.4vw,48px);line-height:1.1}
+.head p{color:var(--ink-2);max-width:52ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 26px;border-radius:10px;background:var(--ink);color:var(--bg);font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:0;text-decoration:none;border:0;cursor:pointer;white-space:nowrap;transition:background .2s}
+.btn:hover{background:#333}
+.link{font-family:var(--serif);font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle}
+code.tag{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:1px 6px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(245,238,234,.45);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);margin-inline:-20px;padding-inline:clamp(20px,4vw,48px)}
+.nav .in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
+.logo{font-family:var(--serif);font-size:26px;font-weight:800;letter-spacing:-.04em;text-decoration:none;line-height:1}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:28px}
+.nav ul a{text-decoration:none;font-family:var(--serif);font-size:14.5px;font-weight:500}
+.nav ul a:hover{text-decoration:underline;text-underline-offset:4px}
+.nav .ph{display:grid;place-items:center}
+
+/* ---------- hero: a sample call on the left, the dashboard it lands in on the right ---------- */
+.hero{border-top:0;padding:76px 0 0;margin:-76px -20px 0;position:relative;overflow:hidden;background:linear-gradient(180deg,#EEF3FC 0%,#F2F4FA 60%,var(--bg) 100%)}
+.glow{position:absolute;inset:-25%;pointer-events:none;filter:blur(30px);
+  background:
+    radial-gradient(42% 52% at 80% 30%,rgba(59,111,232,.20),rgba(59,111,232,0) 72%),
+    radial-gradient(38% 46% at 8% 78%,rgba(96,140,240,.16),rgba(96,140,240,0) 70%),
+    radial-gradient(50% 40% at 45% 0%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);
+  animation:drift 16s ease-in-out infinite alternate}
+@keyframes drift{50%{transform:translate(3%,-2%) scale(1.04)}100%{transform:translate(-2%,-4%) scale(1.07)}}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(rgba(245,238,234,0),var(--bg));pointer-events:none}
+.hero > .stage,.hero > .discover{position:relative;z-index:1}
+.stage{display:grid;grid-template-columns:minmax(0,.82fr) clamp(48px,6vw,84px) minmax(0,1.18fr);grid-template-areas:"chat link mock" "cta cta cta";column-gap:0;row-gap:28px;align-items:stretch;align-content:center;max-width:1240px;margin-inline:auto;padding:clamp(24px,4vh,48px) clamp(20px,4vw,56px);min-height:calc(100vh - 140px)}
+.hero-copy{grid-area:chat;min-width:0;display:flex;animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+.hero-cta{grid-area:cta}
+/* dotted line from the call to the dashboard; dots flow towards the dashboard, a bright dot carries each result */
+.connector{grid-area:link;align-self:center;position:relative;z-index:2;display:flex;align-items:center;gap:5px;margin-inline:-5px;animation:rise .8s .1s both}
+.connector > i{flex:none;width:10px;height:10px;border-radius:50%;background:#FFFCFA;border:1.5px solid rgba(17,17,17,.32)}   /* sits on the card edges like a port */
+.connector .track{position:relative;flex:1;height:4px;background:radial-gradient(circle,rgba(17,17,17,.38) 1.2px,transparent 1.7px) 0 50%/7px 4px repeat-x;animation:flow .8s linear infinite}
+@keyframes flow{to{background-position-x:7px}}
+.connector .pkt{position:absolute;left:0;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;opacity:0}
+.connector .pkt.live{background:#2D5BE3;box-shadow:0 0 0 4px rgba(45,91,227,.18)}
+.connector .pkt.ok{background:var(--good);box-shadow:0 0 0 4px rgba(62,138,87,.2)}
+.connector .pkt.go{animation:send .6s cubic-bezier(.5,0,.5,1) both}
+@keyframes send{0%{left:0;opacity:0}15%,85%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+/* sample call as a chat: messages arrive one by one at the bottom, older ones slide up and blur */
+.chatbox{flex:1;display:flex;flex-direction:column;min-width:0;background:rgba(255,252,250,.55);border:1px solid var(--line);border-radius:20px;padding:14px 14px 16px;box-shadow:0 10px 30px rgba(17,17,17,.06);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.chat-head{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-2);padding:0 4px 12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.chat-head i{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px #E3EEE5;animation:live 1.6s ease-in-out infinite}
+@keyframes live{50%{opacity:.35}}
+.chat{position:relative;flex:1;min-height:240px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 40%);mask-image:linear-gradient(transparent,#000 40%)}
+.chat ol{position:absolute;left:0;right:0;bottom:2px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.chat li{display:none;max-width:88%;padding:10px 14px;border-radius:16px;font-size:clamp(14.5px,1.15vw,16px);line-height:1.45;transition:filter .5s ease,opacity .5s ease}
+.chat li.in{display:block}
+.chat li.old{filter:blur(2px);opacity:.4}
+.chat li.new{animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:scale(.96)}}
+.chat li b{display:block;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;color:var(--muted)}
+.chat li.a{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;color:var(--ink)}
+.chat li.c{align-self:flex-end;background:var(--ink);color:var(--bg);border-bottom-right-radius:4px;font-weight:600}
+.chat li.c b{color:rgba(245,238,234,.6)}
+.chat li.typing{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;padding:12px 16px}
+.chat li.typing span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:var(--muted);animation:dot 1s infinite}
+.chat li.typing span:nth-child(2){animation-delay:.15s}.chat li.typing span:nth-child(3){animation-delay:.3s}
+@keyframes dot{30%{transform:translateY(-4px);opacity:.5}}
+.chat li.res{align-self:center;padding:6px 14px;border-radius:999px;background:#E3EEE5;color:#2E6B43;font-size:14px;font-weight:700}
+.hero-ctas{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.hero-note{margin-top:10px;font-size:13px;color:var(--muted)}
+
+/* dashboard window: a small copy of the HaanJi dashboard */
+.mock{grid-area:mock;position:relative;display:flex;flex-direction:column;animation:rise .9s .15s cubic-bezier(.2,.8,.2,1) both;min-width:0;background:#FFFCFA;border:1px solid rgba(17,17,17,.10);border-radius:14px;overflow:hidden;font-size:12px;line-height:1.4;color:var(--ink);box-shadow:0 40px 80px -30px rgba(36,64,140,.35),0 12px 24px -12px rgba(17,17,17,.12)}
+.mock-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:#F3EEEA;border-bottom:1px solid var(--line)}
+.mock-bar i{width:10px;height:10px;border-radius:50%;background:#FF5F57}
+.mock-bar i:nth-child(2){background:#FEBC2E}.mock-bar i:nth-child(3){background:#28C840}
+.mock-bar span{margin-left:12px;flex:1;max-width:260px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:11px;color:var(--muted)}
+.mock-body{flex:1;display:grid;grid-template-columns:120px minmax(0,1fr)}
+.mock-side{border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:3px}
+.mock-side b{font-size:17px;font-weight:800;letter-spacing:-.04em;padding:0 8px 12px}
+.mock-side span{padding:7px 8px;border-radius:7px;color:var(--ink-2);font-weight:500}
+.mock-side span.on{background:#E8DDD6;color:var(--ink);font-weight:600}
+.mock-main{padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--bg);min-width:0}
+.mock-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mock-head strong{display:block;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.mock-head small{color:var(--ink-2);font-size:11px}
+.mock-wallet{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 10px;font-weight:600;font-size:11px;white-space:nowrap}
+.mock-stats{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mock-stats > div{padding:10px 12px;border-left:1px solid var(--line);min-width:0}
+.mock-stats > div:first-child{border-left:0;background:#F1E4D2}
+.mock-stats small{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--ink-2);white-space:nowrap}
+.mock-stats > div:first-child small{color:#5A3A00;white-space:normal}
+.mock-stats small i{width:6px;height:6px;border-radius:50%}
+.mock-stats strong{display:block;margin-top:2px;font-size:19px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.mock-stats > div:first-child strong{font-size:22px;font-weight:800}
+.mock-stats strong.bump{animation:bump .7s ease;color:var(--good)}
+@keyframes bump{35%{transform:scale(1.2)}}
+.mock-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+.mock-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.mock-card h4{margin:0;font-size:11.5px;font-weight:700}
+.mock-bars{height:118px;display:flex;align-items:flex-end;justify-content:space-between;gap:6px;border-bottom:1px solid var(--line)}
+.mock-bars span{flex:1;max-width:16px;height:100%;display:flex;flex-direction:column-reverse;gap:1px;transform-origin:bottom;animation:grow .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.45s + var(--i) * 70ms)}
+@keyframes grow{from{transform:scaleY(0)}}
+.mock-bars i{display:block;border-radius:2px}
+.mock-bars .g{background:var(--good)}.mock-bars .r{background:var(--crit)}.mock-bars .n{background:#CDC4BE}
+.mock-card ul{list-style:none;margin:0;padding:0}
+.mock-card li{animation:fadein .5s ease both;animation-delay:calc(.6s + var(--i,0) * 90ms);display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 4px;border-top:1px solid var(--line);white-space:nowrap;transition:background 1s ease}
+.mock-card li:first-child{border-top:0}
+.mock-card li[hidden]{display:none}
+.mock-card li span{overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.mock-card li b{color:var(--ink);font-weight:600;margin-right:4px}
+.mock-card li.new{animation:rowin .5s ease;animation-delay:0s}
+.mock-card li.flash{background:rgba(62,138,87,.10)}
+@keyframes rowin{from{opacity:0;transform:translateY(-6px)}}
+@keyframes fadein{from{opacity:0;transform:translateX(8px)}}
+.mock-toast{position:absolute;top:52px;right:14px;z-index:2;display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:var(--ink);color:#fff;font-size:12px;font-weight:600;box-shadow:0 12px 30px -8px rgba(17,17,17,.35);opacity:0;transform:translateY(-10px);transition:opacity .35s ease,transform .35s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.mock-toast b{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--good);font-size:11px}
+.mock-toast.show{opacity:1;transform:none}
+.mpill{flex:none;font-style:normal;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+.mpill.ok{background:#E3EEE5;color:#2E6B43}.mpill.no{background:#F6E1DE;color:#9A3329}.mpill.later{background:#F4E8D3;color:#7A5300}.mpill.na{background:#ECE5E0;color:#5C5450}
+.mpill.live{background:#E3EBFB;color:#2D5BE3}
+.mpill.live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:5px;vertical-align:1px;animation:live 1.2s ease-in-out infinite}
+@media (max-width:960px){
+  .stage{grid-template-columns:1fr;grid-template-areas:"chat" "cta" "mock";row-gap:28px;min-height:0;max-width:640px}
+  .connector{display:none}
+  .chat{min-height:270px}
+}
+@media (max-width:600px){
+  .mock-body{grid-template-columns:1fr}
+  .mock-side{display:none}
+  .mock-stats{grid-template-columns:1fr 1fr}
+  .mock-stats > div:nth-child(3){border-left:0}
+  .mock-stats > div:nth-child(n+3){border-top:1px solid var(--line)}
+  .mock-grid{grid-template-columns:1fr}
+  .mock-grid .mock-card:first-child{display:none}
+}
+.discover{display:flex;flex-direction:column;align-items:center;gap:6px;padding-block:18px 26px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+.discover svg{display:block}
+
+/* intro under the hero */
+.intro{text-align:center}
+.intro p.lead{font-family:var(--serif);font-weight:500;font-size:clamp(20px,2.4vw,26px);line-height:1.5;letter-spacing:-.01em;max-width:30em;margin-inline:auto}
+.intro .ctas{display:flex;gap:28px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:40px}
+.works{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 22px;margin-top:48px;font-size:14px;color:var(--ink-2)}
+.works span:first-child{width:100%;font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.works b{font-weight:600;font-family:var(--serif);font-size:16px;color:var(--ink)}
+
+/* features */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 56px}
+.grid h3{font-size:24px;margin-bottom:8px}
+.grid p{color:var(--ink-2);font-size:15.5px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sub-head{margin:80px 0 28px;display:flex;flex-direction:column;gap:10px}
+.sub-head h3{font-size:clamp(28px,3.6vw,38px)}
+.sub-head p{color:var(--ink-2);max-width:52ch}
+.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-top:24px;border-top:1px solid var(--line)}
+.results b{display:block;font-weight:500;font-size:15px;margin-bottom:4px}
+.results p{color:var(--ink-2);font-size:14px}
+
+/* steps */
+.steps2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:52px 56px}
+.steps2 span{display:block;font-family:var(--serif);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.steps2 h3{font-size:24px;margin-bottom:8px}
+.steps2 > div > p{color:var(--ink-2);font-size:15.5px}
+.steps2 em{display:block;font-style:normal;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-top:14px}
+.steps2 em small{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:none;font-weight:400;margin-left:8px}
+.steps2 ul,.cta-list,.price ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--ink-2)}
+.steps2 li::before,.cta-list li::before,.price li::before{content:"—";margin-right:10px;color:var(--ink)}
+
+/* pricing */
+.price{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.big{font-family:var(--serif);font-size:76px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.big small{font-family:var(--sans);font-size:15px;color:var(--ink-2);margin-left:8px}
+.price-note{color:var(--ink-2);font-size:15.5px;margin-top:16px;max-width:38ch}
+.price ul{margin:24px 0 32px}
+.calc{display:flex;flex-direction:column;gap:18px;background:var(--paper);border:1px solid var(--line);padding:28px}
+.calc h3{font-size:24px}
+.calc .row{display:flex;flex-direction:column;gap:6px}
+.calc label{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:var(--ink-2)}
+.calc label output{color:var(--ink);font-weight:500}
+.calc input[type=range]{width:100%;margin:0;accent-color:var(--ink)}
+.calc .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.calc .two span{display:block;font-size:13px;color:var(--ink-2)}
+.calc .two strong{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-.02em}
+.calc .net{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.calc .net span{font-size:14px;color:var(--ink-2)}
+.calc .net strong{font-family:var(--serif);font-size:40px;font-weight:800;letter-spacing:-.03em;color:var(--good)}
+.fine{margin-top:14px;font-size:13px;color:var(--muted)}
+
+/* sample calls */
+.picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:40px}
+.picks button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:16px;padding:22px;border:1px solid var(--line);background:transparent;transition:background .2s,border-color .2s}
+.picks button:hover{background:var(--paper)}
+.picks button[aria-selected="true"]{background:var(--paper);border-color:var(--ink)}
+.picks button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.picks q{font-family:var(--serif);font-size:17px;font-weight:600;line-height:1.4}
+.picks small{color:var(--ink-2);font-size:13.5px}
+.picks small b{display:block;color:var(--ink);font-weight:500;font-size:14.5px}
+.callhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.callhead h3{font-size:28px}
+.callhead p{color:var(--ink-2);font-size:14.5px}
+.transcript{display:flex;flex-direction:column;gap:12px;font-size:16px}
+.transcript div{display:grid;grid-template-columns:80px 1fr;gap:16px;transition:opacity .3s}
+.transcript b{font-size:11.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.transcript div span{color:var(--ink-2)}
+.transcript div.c span{color:var(--ink);font-family:var(--serif);font-weight:600;font-size:16px}
+.transcript.playing div.wait{opacity:.2}
+.callfoot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-2)}
+.ghostbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border:1px solid var(--ink);border-radius:10px;font-size:15px;font-weight:600}
+.ghostbtn:hover{background:var(--ink);color:var(--bg)}
+.ghostbtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-child{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;font-family:var(--serif);font-size:18px;font-weight:600}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--sans);font-size:22px;line-height:1;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 22px;color:var(--ink-2);max-width:62ch}
+.mail{margin-top:28px;color:var(--ink-2)}
+.mail b{color:var(--ink);font-weight:500;user-select:all}
+
+/* closing: CTA + try a call */
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.cta h2{font-size:clamp(36px,5vw,54px);line-height:1.05}
+.cta .lead > p{color:var(--ink-2);margin-top:16px;max-width:42ch}
+.cta-list{margin:24px 0 32px}
+.cta .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:14.5px;color:var(--ink-2)}
+.sim{background:var(--paper);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:14px;min-height:440px}
+.sim header{display:flex;justify-content:space-between;font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.sim header span:last-child{color:var(--muted)}
+.log{flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:310px}
+.log p{max-width:86%;padding:11px 14px;font-size:15px;line-height:1.45}
+.log p.a{background:var(--bg);align-self:flex-start}
+.log p.c{align-self:flex-end;background:var(--ink);color:var(--bg)}
+.log p.end{align-self:stretch;max-width:none;border:1px solid var(--line);color:var(--ink-2);font-size:14.5px}
+.log p.end b{color:var(--ink);font-weight:500}
+.replies{display:flex;gap:8px;flex-wrap:wrap}
+.replies small{width:100%;font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.replies button{all:unset;cursor:pointer;padding:10px 16px;border:1px solid var(--ink);border-radius:999px;font-size:14.5px;font-weight:500;transition:background .2s,color .2s}
+.replies button:hover{background:var(--ink);color:var(--bg)}
+.replies button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding-block:56px 40px}
+.grid3{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;font-size:15px}
+.grid3 p{color:var(--ink-2);margin-top:14px;max-width:34ch}
+.grid3 .col{display:flex;flex-direction:column;gap:8px}
+.grid3 strong{font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.grid3 .col a{text-decoration:none;font-family:var(--serif);color:var(--ink-2)}
+.grid3 .col a:hover{color:var(--ink)}
+.copy{margin-top:44px;font-size:13px;color:var(--muted)}
+
+@media (max-width:860px){
+  .nav ul li.opt{display:none}
+}
+@media (max-width:760px){
+  section{padding-block:76px}
+  .grid,.price,.steps2,.cta,.picks,.grid3{grid-template-columns:1fr}
+  .results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .big{font-size:68px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .chat li,.mock *,.connector *{animation:none!important;transition:none!important}
+  .glow{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="in">
+    <a class="logo" href="#top" aria-label="HaanJi home">haanji</a>
+    <ul>
+      <li class="opt"><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li class="opt"><a href="#calls">Sample calls</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li class="opt"><a href="#try">Get started</a></li>
+      <li><a class="ph" href="#try" aria-label="Try a call"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M21 16.5v3a2 2 0 0 1-2.2 2A19 19 0 0 1 2.5 5.2 2 2 0 0 1 4.5 3h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.4 10.8a16 16 0 0 0 4.8 4.8l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO: a sample call plays as a chat; its result lands in the dashboard window beside it -->
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <h1 class="sr">Every COD order, confirmed.</h1>
+  <div class="stage" id="stage">
+    <div class="hero-copy">
+      <div class="chatbox">
+      <p class="chat-head"><i></i>Live call · Kesar Kurtis → Priya, Jaipur</p>
+      <div class="chat" aria-label="A sample HaanJi call">
+        <ol id="chat">
+          <li class="a"><b>HaanJi</b>Namaste Priya ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,299 ka Cotton Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?</li>
+          <li class="c"><b>Priya</b>Haan ji, bhej dijiye.</li>
+          <li class="a"><b>HaanJi</b>Bahut badhiya! Aapka delivery address hai: B-24, Malviya Nagar, Jaipur. Kya ye sahi hai?</li>
+          <li class="c"><b>Priya</b>Haan, sahi hai.</li>
+          <li class="a"><b>HaanJi</b>Dhanyavaad Priya ji! Aapka order 2-3 din mein pahunch jayega.</li>
+          <li class="res">✓ Order confirmed · ready to ship</li>
+        </ol>
+      </div>
+      </div>
+    </div>
+    <div class="connector" id="connector" aria-hidden="true"><i></i><span class="track"><b class="pkt"></b></span><i></i></div>
+    <div class="mock" role="img" aria-label="The HaanJi dashboard: calls today, confirmed and cancelled orders, RTO money saved and the latest calls">
+      <div class="mock-bar" aria-hidden="true"><i></i><i></i><i></i><span>app.haanji.in</span></div>
+      <div class="mock-toast" id="m-toast" aria-hidden="true"><b>✓</b>Priya Sharma confirmed · Shopify tag added</div>
+      <div class="mock-body" aria-hidden="true">
+        <div class="mock-side"><b>haanji</b><span class="on">Dashboard</span><span>Calls</span><span>Call script</span><span>Settings</span></div>
+        <div class="mock-main">
+          <div class="mock-head"><div><strong>Good evening, Kesar Kurtis</strong><small>Here's what your calls did today.</small></div><span class="mock-wallet">₹1,840</span></div>
+          <div class="mock-stats">
+            <div><small>RTO money saved this month</small><strong data-count="46880" data-rupee>₹46,880</strong></div>
+            <div><small>Calls today</small><strong id="m-calls" data-count="128">128</strong></div>
+            <div><small><i style="background:var(--good)"></i>Confirmed</small><strong id="m-conf" data-count="97">97</strong></div>
+            <div><small><i style="background:var(--crit)"></i>Cancelled</small><strong data-count="14">14</strong></div>
+          </div>
+          <div class="mock-grid">
+            <div class="mock-card"><h4>Last 7 days</h4><div class="mock-bars"><span style="--i:0"><i class="g" style="height:58.7%"></i><i class="r" style="height:8.0%"></i><i class="n" style="height:12.0%"></i></span><span style="--i:1"><i class="g" style="height:63.3%"></i><i class="r" style="height:10.0%"></i><i class="n" style="height:9.3%"></i></span><span style="--i:2"><i class="g" style="height:52.7%"></i><i class="r" style="height:6.0%"></i><i class="n" style="height:10.7%"></i></span><span style="--i:3"><i class="g" style="height:68.0%"></i><i class="r" style="height:9.3%"></i><i class="n" style="height:8.7%"></i></span><span style="--i:4"><i class="g" style="height:73.3%"></i><i class="r" style="height:12.0%"></i><i class="n" style="height:14.0%"></i></span><span style="--i:5"><i class="g" style="height:56.0%"></i><i class="r" style="height:10.7%"></i><i class="n" style="height:10.0%"></i></span><span style="--i:6"><i class="g" style="height:64.7%"></i><i class="r" style="height:9.3%"></i><i class="n" style="height:11.3%"></i></span></div></div>
+            <div class="mock-card"><h4>Latest calls</h4>
+              <ul id="m-rows">
+                <li style="--i:0"><span><b>Fatima Khan</b>Bhopal</span><em class="mpill ok">Confirmed</em></li>
+                <li style="--i:1"><span><b>Rahul Verma</b>Lucknow</span><em class="mpill no">Cancelled</em></li>
+                <li style="--i:2"><span><b>Sneha Patil</b>Pune</span><em class="mpill later">Call later</em></li>
+                <li style="--i:3"><span><b>Aman Gupta</b>Indore</span><em class="mpill na">No answer</em></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <div class="hero-ctas">
+        <a class="btn" href="#try">Start with 50 free calls</a>
+        <a class="link" href="#calls">Hear a call</a>
+      </div>
+      <p class="hero-note">No card needed · ₹3 per answered call</p>
+    </div>
+  </div>
+  <a class="discover" href="#intro">Discover more<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M0 0h10L5 6z" fill="currentColor"/></svg></a>
+</section>
+
+<section class="intro" id="intro">
+  <div class="wrap">
+    <p class="lead">HaanJi calls your customer in Hindi, Hinglish or English a few minutes after they order. Fake and unwanted orders are caught before you ship them, so you stop paying for RTO.</p>
+    <div class="ctas">
+      <a class="btn" href="#try">Start with 50 free calls</a>
+      <a class="link" href="#calls">Hear a call</a>
+    </div>
+    <div class="works"><span>Works with what you already use</span><b>Shopify</b><b>Excel &amp; CSV</b><b>UPI recharge</b><b>Hindi</b><b>Hinglish</b><b>English</b></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Features</p>
+      <h2>Built for cash on delivery in India.</h2>
+      <p>One job, done well: find out if the customer really wants the order before it leaves your warehouse.</p>
+    </div>
+    <div class="grid">
+      <div><h3>Talks the way your customers talk</h3><p>A natural voice that understands “haan”, “nahi” and “baad mein”. Pick Hindi, Hinglish or English and one of four voices for your brand.</p></div>
+      <div><h3>Results land on the order</h3><p>Each Shopify order gets a tag and a note after the call. No Shopify? Upload an Excel sheet and download the results.</p><div class="tags"><code class="tag">cod-confirmed</code><code class="tag">cod-cancelled</code><code class="tag">cod-callback</code></div></div>
+      <div><h3>Calls at the right time</h3><p>The first call goes out 5 minutes after the order, only between 9 AM and 9 PM. Missed calls are retried up to 3 times, 2 hours apart. You can change all of it.</p></div>
+      <div><h3>Every call, on record</h3><p>Listen to the recording, read the transcript and see why a customer cancelled. Your dashboard shows the RTO money you saved this month.</p></div>
+    </div>
+    <div class="sub-head">
+      <h3>One call. One clear answer.</h3>
+      <p>Every call ends in one of four results, written straight back to your order. You decide what to ship.</p>
+    </div>
+    <div class="results">
+      <div><b><span class="dot" style="background:var(--good)"></span>Confirmed</b><p>Tagged and ready to ship</p></div>
+      <div><b><span class="dot" style="background:var(--crit)"></span>Cancelled</b><p>Stopped before shipping, reason saved</p></div>
+      <div><b><span class="dot" style="background:var(--warn)"></span>Call later</b><p>Called back at the time they asked</p></div>
+      <div><b><span class="dot" style="background:var(--none)"></span>No answer</b><p>Tried again, up to 3 times</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">How it works</p>
+      <h2>Live in about ten minutes.</h2>
+      <p>No developer, no flowcharts. Four short steps from sign-up to your first real call.</p>
+    </div>
+    <div class="steps2">
+      <div><span>Step 1</span><h3>Connect your store</h3><p>Sign in with Google or your mobile number, then connect Shopify in one click.</p><em>2 min</em>
+        <ul><li>Only new COD orders are called</li><li>Prepaid orders are skipped</li><li>No Shopify? Upload an Excel or CSV sheet</li></ul></div>
+      <div><span>Step 2</span><h3>Pick a language and voice</h3><p>Tap play to hear each voice. You can change them anytime.</p><em>1 min</em>
+        <ul><li>Hindi, Hinglish or English</li><li>Ananya, Meera, Rohit or Kabir</li><li>Your brand name in every greeting</li></ul></div>
+      <div><span>Step 3</span><h3>Take a test call</h3><p>HaanJi calls your own phone with a sample order, so you hear exactly what customers will hear.</p><em>Free<small>test calls cost nothing</small></em>
+        <ul><li>Edit any line in plain text boxes</li><li>See a live preview as you type</li><li>Test again as often as you like</li></ul></div>
+      <div><span>Step 4</span><h3>Go live</h3><p>From now on, every new COD order gets its call automatically. Pause anytime from settings.</p><em>50 calls</em>
+        <ul><li>₹150 free credit to start</li><li>Results in Shopify and your dashboard</li><li>Dashboard in English or हिंदी</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Pricing</p>
+      <h2>Pay only when they pick up.</h2>
+      <p>No monthly plan and no setup fee. Add money by UPI and calls use it up.</p>
+    </div>
+    <div class="price">
+      <div>
+        <p class="eyebrow" style="margin-bottom:16px">Pay as you go</p>
+        <div class="big num">₹3<small>per answered call</small></div>
+        <p class="price-note">Covers the first minute. Most confirmation calls finish well inside it.</p>
+        <ul>
+          <li>₹2 for each extra minute</li>
+          <li>Unanswered, busy and test calls are free</li>
+          <li>₹150 free credit when you sign up</li>
+          <li>Recharge by UPI from ₹500</li>
+        </ul>
+        <a class="btn" href="#try">Start with 50 free calls</a>
+      </div>
+      <form class="calc" id="calc" onsubmit="return false">
+        <h3>What could you save?</h3>
+        <div class="row">
+          <label for="c-orders">COD orders a month <output id="o-orders" class="num">3,000</output></label>
+          <input id="c-orders" type="range" min="100" max="20000" step="100" value="3000">
+        </div>
+        <div class="row">
+          <label for="c-rto">RTO cost per returned order <output id="o-rto" class="num">₹160</output></label>
+          <input id="c-rto" type="range" min="60" max="400" step="10" value="160">
+        </div>
+        <div class="row">
+          <label for="c-cancel">Orders customers don’t really want <output id="o-cancel" class="num">8%</output></label>
+          <input id="c-cancel" type="range" min="1" max="30" step="1" value="8">
+        </div>
+        <div class="two">
+          <div><span>RTO you avoid</span><strong class="num" id="r-saved">₹38,400</strong></div>
+          <div><span>HaanJi calls, at most</span><strong class="num" id="r-cost">₹9,000</strong></div>
+        </div>
+        <div class="net"><span>Left in your pocket each month</span><strong class="num" id="r-net">₹29,400</strong></div>
+        <p class="fine" style="margin:0">An estimate from your own numbers. The call cost assumes every customer picks up and talks for under a minute; unanswered calls are free, so the real cost is usually lower.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="calls">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Sample calls</p>
+      <h2>Hear how HaanJi talks.</h2>
+      <p>Three sample calls for a made-up store, Kesar Kurtis. Your calls use your brand name, your products and your chosen voice.</p>
+    </div>
+    <div class="picks" role="tablist" aria-label="Choose a sample call">
+      <button role="tab" type="button" data-i="0" aria-selected="true"><q>Haan ji, bhej dijiye.</q><small><b>Priya Sharma</b>Jaipur · Confirmed</small></button>
+      <button role="tab" type="button" data-i="1" aria-selected="false"><q>Nahi, galti se order ho gaya.</q><small><b>Rahul Verma</b>Lucknow · Cancelled</small></button>
+      <button role="tab" type="button" data-i="2" aria-selected="false"><q>Abhi meeting mein hoon, shaam ko call karna.</q><small><b>Sneha Patil</b>Pune · Call later</small></button>
+    </div>
+    <div class="callhead"><h3 id="p-name">Priya Sharma</h3><p id="p-order">Cotton Anarkali Kurti · ₹1,299 · Jaipur</p></div>
+    <div class="transcript" id="p-lines"></div>
+    <div class="callfoot">
+      <span id="p-result"></span>
+      <button class="ghostbtn" type="button" id="p-play"><svg width="9" height="9" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg><span>Play call</span></button>
+    </div>
+    <p class="fine">Playback uses your browser’s built-in voice, so it sounds more robotic than a real HaanJi call.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions sellers ask.</h2>
+      <p>Short answers about calls, money and your Shopify orders. Anything else, write to us.</p>
+    </div>
+    <div class="faq">
+      <details><summary>Does HaanJi cancel orders in Shopify by itself?</summary><p>No. It adds a tag and a note, like <code class="tag">cod-cancelled</code> with the reason. You stay in control of what gets cancelled and what gets shipped.</p></details>
+      <details><summary>What if the customer doesn’t pick up?</summary><p>HaanJi tries again up to 3 times, 2 hours apart, only inside your calling hours. If there is still no answer, the order is tagged <code class="tag">cod-no-answer</code>. Unanswered calls are free.</p></details>
+      <details><summary>What if the customer says “call me later”?</summary><p>HaanJi asks when, and calls back at that time. If they say “raat 11 baje”, the call moves to 9 AM the next morning, because nobody is called outside your calling hours.</p></details>
+      <details><summary>Can I change what HaanJi says?</summary><p>Yes. Every line of the call is a plain text box in your dashboard, with a live preview. Change it, save it, and the next call uses it.</p></details>
+      <details><summary>Do I need Shopify?</summary><p>No. You can upload an Excel or CSV sheet of orders and download a sheet with the results. Shopify just makes it automatic.</p></details>
+      <details><summary>What happens when my balance runs out?</summary><p>Calls pause, they aren’t lost. You get a warning when the balance drops below ₹300. As soon as you recharge, every waiting customer is called.</p></details>
+    </div>
+    <p class="mail">Write to us at <b>hello@haanji.in</b></p>
+  </div>
+</section>
+
+<section id="try">
+  <div class="wrap cta">
+    <div class="lead">
+      <h2>Stop paying for RTO.</h2>
+      <p>Every fake COD order you ship costs you courier charges both ways. Try a call right here as the customer, then start with 50 free calls.</p>
+      <ul class="cta-list">
+        <li>50 free calls, no card needed.</li>
+        <li>No monthly plan. Pay only for answered calls.</li>
+        <li>Set up yourself in about ten minutes.</li>
+      </ul>
+      <div class="row"><a class="btn" href="#try">Start with 50 free calls</a><span>or write to hello@haanji.in</span></div>
+    </div>
+    <div class="sim" aria-label="Try a sample call">
+      <header><span>Kesar Kurtis → You</span><span id="sim-state">Test call</span></header>
+      <div class="log" id="sim-log" aria-live="polite"></div>
+      <div class="replies" id="sim-replies"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grid3">
+      <div>
+        <a class="logo" href="#top">haanji</a>
+        <p>AI calls that confirm cash-on-delivery orders for Indian D2C brands, in the customer’s own language.</p>
+      </div>
+      <div class="col"><strong>Pages</strong><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#calls">Sample calls</a><a href="#faq">FAQ</a></div>
+      <div class="col"><strong>Support</strong><a href="#try">Try a call</a><a href="#faq">Contact</a></div>
+    </div>
+    <p class="copy">© 2026 HaanJi. Made in India.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return "₹" + Math.round(n).toLocaleString("en-IN"); }
+
+/* ================= HERO: the sample call arrives like a chat, newest message always at the bottom ================= */
+/* the dashboard window: Priya's row appears when the call starts and turns Confirmed when it ends */
+var mock = (function(){
+  var rows = $("m-rows"), conf = $("m-conf"), calls = $("m-calls"), toast = $("m-toast"), live = null, toastTimer = null;
+
+  /* numbers count up from zero when the page opens */
+  function countUp(){
+    [].forEach.call(document.querySelectorAll(".mock [data-count]"), function(el){
+      var to = +el.dataset.count, rupee = el.hasAttribute("data-rupee"), t0 = null;
+      function frame(ts){
+        if(t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 1200), v = Math.round(to * (1 - Math.pow(1 - p, 3)));
+        el.textContent = (rupee ? "₹" : "") + v.toLocaleString("en-IN");
+        if(p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function reset(){
+    if(live){ live.remove(); live = null; }
+    [].forEach.call(rows.children, function(r){ r.hidden = false; });
+    conf.textContent = "97"; calls.textContent = "128"; conf.classList.remove("bump"); calls.classList.remove("bump");
+    clearTimeout(toastTimer); toast.classList.remove("show");
+  }
+  function bump(el, v){ el.textContent = v; el.classList.remove("bump"); el.offsetWidth; el.classList.add("bump"); }
+  function calling(){
+    reset();
+    live = document.createElement("li"); live.className = "new";
+    live.innerHTML = '<span><b>Priya Sharma</b>Jaipur</span><em class="mpill live">On call</em>';
+    rows.insertBefore(live, rows.firstChild);
+    rows.lastElementChild.hidden = true;   /* keep the list at four rows */
+    bump(calls, "129");
+  }
+  function confirmed(){
+    if(!live) return;
+    var pill = live.querySelector("em"); pill.className = "mpill ok"; pill.textContent = "Confirmed";
+    live.classList.add("flash"); setTimeout(function(){ if(live) live.classList.remove("flash"); }, 1600);
+    bump(conf, "98");
+    toast.classList.add("show");
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 2600);
+  }
+  return { reset: reset, calling: calling, confirmed: confirmed, countUp: countUp };
+})();
+
+/* the dotted connector: a dot runs from the call to the dashboard, then fn runs */
+var connector = (function(){
+  var line = $("connector"), pkt = line.querySelector(".pkt");
+  function send(kind, fn){
+    if(reduce || getComputedStyle(line).display === "none"){ fn(); return; }
+    pkt.className = "pkt " + kind; pkt.offsetWidth; pkt.className = "pkt go " + kind;   /* restart the run */
+    setTimeout(fn, 550);
+  }
+  return { send: send };
+})();
+
+var convo = (function(){
+  var list = $("chat"), msgs = [].slice.call(list.children), timers = [];
+  var typing = document.createElement("li");
+  typing.className = "typing"; typing.setAttribute("aria-hidden", "true");
+  typing.innerHTML = "<span></span><span></span><span></span>";
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+
+  /* show one bubble at the bottom; everything above slides up smoothly (FLIP) and goes soft */
+  function show(li){
+    var before = list.offsetHeight;
+    msgs.concat(typing).forEach(function(m){ m.classList.remove("new"); if(m !== li && m.classList.contains("in")) m.classList.add("old"); });
+    if(li === typing) list.appendChild(typing);
+    else if(typing.parentNode) typing.remove();
+    li.classList.remove("old"); li.classList.add("in", "new");
+    var shift = list.offsetHeight - before;
+    list.style.transition = "none"; list.style.transform = "translateY(" + shift + "px)";
+    list.offsetHeight;   /* apply the start position before animating */
+    list.style.transition = "transform .45s cubic-bezier(.2,.8,.2,1)"; list.style.transform = "";
+  }
+  function reading(li){ return Math.max(1500, li.textContent.length * 38); }
+  function run(){
+    var t = 400;
+    later(function(){ connector.send("live", mock.calling); }, 200);
+    msgs.forEach(function(li){
+      var isResult = li.classList.contains("res");
+      if(li.classList.contains("a")){ later(function(){ show(typing); }, t); t += 900; }
+      later(function(){ show(li); if(isResult) connector.send("ok", mock.confirmed); }, t);
+      t += li.classList.contains("res") ? 3200 : reading(li);
+    });
+    later(restart, t);
+  }
+  function restart(){
+    timers.forEach(clearTimeout); timers = [];
+    if(typing.parentNode) typing.remove();
+    msgs.forEach(function(li){ li.classList.remove("in", "old", "new"); });
+    mock.reset();
+    if(reduce){ msgs.forEach(function(li){ li.classList.add("in"); }); mock.calling(); mock.confirmed(); return; }
+    run();
+  }
+  /* first run waits for the dashboard to finish counting up */
+  if(reduce) restart(); else { mock.countUp(); setTimeout(restart, 1500); }
+  return { restart: restart };
+})();
+
+
+/* ================= savings estimate ================= */
+function calc(){
+  var o = +$("c-orders").value, r = +$("c-rto").value, p = +$("c-cancel").value;
+  var saved = o*p/100*r, cost = o*3, net = saved - cost;
+  $("o-orders").textContent = o.toLocaleString("en-IN");
+  $("o-rto").textContent = fmt(r);
+  $("o-cancel").textContent = p + "%";
+  $("r-saved").textContent = fmt(saved);
+  $("r-cost").textContent = fmt(cost);
+  $("r-net").textContent = (net < 0 ? "−" : "") + fmt(Math.abs(net));
+  $("r-net").style.color = net < 0 ? "var(--crit)" : "var(--good)";
+}
+$("calc").addEventListener("input", calc); calc();
+
+/* ================= sample calls ================= */
+var CALLS = [
+  {first:"Priya", name:"Priya Sharma", order:"Cotton Anarkali Kurti · ₹1,299 · Jaipur",
+   lines:[["a","Namaste Priya ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,299 ka Cotton Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Haan ji, bhej dijiye."],["a","Bahut badhiya! Aapka delivery address hai: B-24, Malviya Nagar, Jaipur. Kya ye sahi hai?"],["c","Haan, sahi hai."],["a","Dhanyavaad Priya ji! Aapka order 2-3 din mein pahunch jayega."]],
+   result:'<span class="dot" style="background:var(--good)"></span>Confirmed · tagged <code class="tag">cod-confirmed</code> · ready to ship'},
+  {first:"Rahul", name:"Rahul Verma", order:"Linen Kurta Set · ₹1,849 · Lucknow",
+   lines:[["a","Namaste Rahul ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,849 ka Linen Kurta Set order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Nahi, galti se order ho gaya."],["a","Koi baat nahi. Kya aap bata sakte hain ki cancel kyun karna hai?"],["c","Size galat select ho gaya tha."],["a","Samajh gayi. Aapka order cancel kar diya gaya hai. Dhanyavaad!"]],
+   result:'<span class="dot" style="background:var(--crit)"></span>Cancelled · tagged <code class="tag">cod-cancelled</code> · reason: wrong size · not shipped'},
+  {first:"Sneha", name:"Sneha Patil", order:"Block Print Dupatta · ₹899 · Pune",
+   lines:[["a","Namaste Sneha ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹899 ka Block Print Dupatta order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Abhi meeting mein hoon, shaam ko call karna."],["a","Bilkul, koi baat nahi. Aapko kab call karein?"],["c","Shaam 6 baje."],["a","Theek hai, main shaam 6 baje call karungi. Dhanyavaad!"]],
+   result:'<span class="dot" style="background:var(--warn)"></span>Call later · tagged <code class="tag">cod-callback</code> · next call today at 6:00 PM'}
+];
+var cur = 0, token = 0, playing = false;
+var linesEl = $("p-lines"), tabs = document.querySelectorAll(".picks button"), playBtn = $("p-play");
+function show(i){
+  stop(); cur = i; var k = CALLS[i];
+  tabs.forEach(function(b){ b.setAttribute("aria-selected", String(+b.dataset.i === i)); });
+  $("p-name").textContent = k.name;
+  $("p-order").textContent = k.order;
+  linesEl.innerHTML = "";
+  k.lines.forEach(function(l){
+    var d = document.createElement("div"); d.className = l[0];
+    var b = document.createElement("b"); b.textContent = l[0] === "a" ? "HaanJi" : k.first;
+    var s = document.createElement("span"); s.textContent = l[1];
+    d.appendChild(b); d.appendChild(s); linesEl.appendChild(d);
+  });
+  $("p-result").innerHTML = k.result;
+}
+tabs.forEach(function(b){ b.addEventListener("click", function(){ show(+b.dataset.i); }); });
+var synth = window.speechSynthesis;
+function pickVoice(){
+  if(!synth) return null;
+  var vs = []; try{ vs = synth.getVoices(); }catch(e){}
+  return vs.filter(function(v){ return /hi[-_]IN/i.test(v.lang); })[0] || vs.filter(function(v){ return /en[-_]IN/i.test(v.lang); })[0] || null;
+}
+function label(on){ playBtn.querySelector("span").textContent = on ? "Stop" : "Play call"; }
+function stop(){
+  token++; playing = false;
+  try{ if(synth) synth.cancel(); }catch(e){}
+  linesEl.classList.remove("playing");
+  linesEl.querySelectorAll("div").forEach(function(d){ d.classList.remove("wait"); });
+  label(false);
+}
+function speak(text, agent, done){
+  var ok = false;
+  if(synth){
+    try{
+      var u = new SpeechSynthesisUtterance(text), v = pickVoice();
+      if(v){ u.voice = v; u.lang = v.lang; } else { u.lang = "hi-IN"; }
+      u.rate = .98; u.pitch = agent ? 1.1 : .9; u.onend = done; u.onerror = done;
+      synth.speak(u); ok = true;
+    }catch(e){ ok = false; }
+  }
+  if(!ok) setTimeout(done, 900 + text.length*45);
+}
+playBtn.addEventListener("click", function(){
+  if(playing){ stop(); return; }
+  var t = ++token, rows = linesEl.querySelectorAll("div"), k = CALLS[cur], i = 0;
+  playing = true; label(true);
+  linesEl.classList.add("playing");
+  rows.forEach(function(d){ d.classList.add("wait"); });
+  (function next(){
+    if(t !== token) return;
+    if(i >= rows.length){ stop(); return; }
+    rows[i].classList.remove("wait");
+    var line = k.lines[i]; i++;
+    speak(line[1], line[0] === "a", function(){ if(t === token) setTimeout(next, 250); });
+  })();
+});
+show(0);
+
+/* ================= try-a-call (same steps as the real script) ================= */
+var FLOW = {
+  greet:{say:"Namaste ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,299 ka Cotton Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?",
+    opts:[["Haan, bhej do","confirm_address"],["Nahi chahiye","ask_reason"],["Baad mein call karo","ask_callback_time"]]},
+  confirm_address:{say:"Bahut badhiya! Aapka delivery address hai: B-24, Malviya Nagar, Jaipur 302017. Kya ye sahi hai?",
+    opts:[["Haan, sahi hai","close_confirmed"],["Address badalna hai","take_new_address"]]},
+  take_new_address:{say:"Koi baat nahi, naya address bata dijiye.", opts:[["Flat 12, Shanti Apartments, C-Scheme, Jaipur","close_confirmed"]]},
+  close_confirmed:{say:"Dhanyavaad ji! Aapka order 2-3 din mein pahunch jayega.", end:["Confirmed","cod-confirmed","Ready to ship."]},
+  ask_reason:{say:"Koi baat nahi. Kya aap bata sakte hain ki cancel kyun karna hai?",
+    opts:[["Galti se order ho gaya","close_cancelled"],["Price zyada lag raha hai","close_cancelled"],["Kahin aur se le liya","close_cancelled"]]},
+  close_cancelled:{say:"Samajh gayi. Aapka order cancel kar diya gaya hai. Dhanyavaad!", end:["Cancelled","cod-cancelled","Not shipped, so no RTO."]},
+  ask_callback_time:{say:"Bilkul, koi baat nahi. Aapko kab call karein?", opts:[["Shaam 6 baje","close_callback"],["Kal subah","close_callback"]]},
+  close_callback:{say:"Theek hai, main tab call karungi. Dhanyavaad!", end:["Call later","cod-callback","HaanJi calls again at that time."]}
+};
+var log = $("sim-log"), reps = $("sim-replies"), state = $("sim-state");
+function bubble(cls, text){ var p = document.createElement("p"); p.className = cls; p.textContent = text; log.appendChild(p); log.scrollTop = log.scrollHeight; }
+function go(node){
+  var n = FLOW[node];
+  bubble("a", n.say);
+  reps.innerHTML = "";
+  if(n.end){
+    state.textContent = "Call ended";
+    var p = document.createElement("p"); p.className = "end";
+    p.innerHTML = 'Result: <b></b> · tagged <b class="t"></b> in Shopify. <span></span>';
+    p.querySelector("b").textContent = n.end[0]; p.querySelector(".t").textContent = n.end[1]; p.querySelector("span").textContent = n.end[2];
+    log.appendChild(p); log.scrollTop = log.scrollHeight;
+    var again = document.createElement("button"); again.type = "button"; again.textContent = "Try another answer";
+    again.addEventListener("click", start2); reps.appendChild(again);
+    return;
+  }
+  var hint = document.createElement("small"); hint.textContent = "Answer as the customer"; reps.appendChild(hint);
+  n.opts.forEach(function(o){
+    var b = document.createElement("button"); b.type = "button"; b.textContent = o[0];
+    b.addEventListener("click", function(){ bubble("c", o[0]); reps.innerHTML = ""; setTimeout(function(){ go(o[1]); }, reduce ? 0 : 400); });
+    reps.appendChild(b);
+  });
+}
+function start2(){ log.innerHTML = ""; state.textContent = "Test call"; go("greet"); }
+start2();
+})();
+</script>
+</body>
+</html>

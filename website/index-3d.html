@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HaanJi</title>
+<meta name="description" content="HaanJi calls your cash-on-delivery customers in Hindi, Hinglish or English minutes after they order, confirms the order and tags the result in Shopify. Fewer fake orders, less RTO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@400;500&display=swap">
+<style>
+/* One warm-paper editorial look on purpose (no dark theme). */
+:root{
+  color-scheme:light;
+  --bg:#F5EEEA;
+  --paper:#FFFCFA;
+  --ink:#111111;
+  --ink-2:#5C5450;
+  --muted:#968C86;
+  --line:rgba(17,17,17,.12);
+  --good:#3E8A57; --crit:#BF4639; --warn:#B9832A; --none:#9A918B;
+  --serif:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --sans:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;padding-inline:20px}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;text-wrap:balance}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:900px;margin-inline:auto}
+section{padding-block:104px;border-top:1px solid var(--line)}
+
+.eyebrow{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink)}
+.head{display:flex;flex-direction:column;gap:14px;margin-bottom:52px}
+.head h2{font-size:clamp(32px,4.4vw,48px);line-height:1.1}
+.head p{color:var(--ink-2);max-width:52ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 28px;background:var(--ink);color:var(--bg);font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:0;cursor:pointer;white-space:nowrap;transition:background .2s}
+.btn:hover{background:#333}
+.link{font-family:var(--serif);font-style:italic;font-size:17px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle}
+code.tag{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:1px 6px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(245,238,234,.45);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);margin-inline:-20px;padding-inline:clamp(20px,4vw,48px)}
+.nav .in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
+.logo{font-family:var(--serif);font-style:italic;font-size:30px;font-weight:400;letter-spacing:-.02em;text-decoration:none;line-height:1}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:28px}
+.nav ul a{text-decoration:none;font-family:var(--serif);font-size:14px}
+.nav ul a:hover{text-decoration:underline;text-underline-offset:4px}
+.nav .ph{display:grid;place-items:center}
+
+/* ---------- hero: the walk-in ---------- */
+.hero{border-top:0;padding:76px 0 0;margin:-76px -20px 0;position:relative;overflow:hidden;background:#DCD7CD}
+.glow{position:absolute;inset:-25%;pointer-events:none;filter:blur(30px);
+  background:
+    radial-gradient(34% 44% at 38% 82%,#D8432A 0%,rgba(222,88,56,.9) 26%,rgba(229,132,100,.55) 52%,rgba(232,160,135,0) 78%),
+    radial-gradient(26% 36% at 10% 96%,rgba(246,206,186,.95),rgba(246,206,186,0) 72%),
+    radial-gradient(40% 30% at 75% 10%,rgba(240,236,228,.9),rgba(240,236,228,0) 70%);
+  animation:drift 16s ease-in-out infinite alternate}
+@keyframes drift{50%{transform:translate(3%,-2%) scale(1.04)}100%{transform:translate(-2%,-4%) scale(1.07)}}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(rgba(245,238,234,0),var(--bg));pointer-events:none}
+.hero > .stage,.hero > .discover{position:relative;z-index:1}
+.stage{position:relative;width:100%;max-width:1280px;margin-inline:auto;aspect-ratio:2/1;max-height:calc(100vh - 140px);min-height:420px;overflow:hidden}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.words{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:1;text-align:center;white-space:nowrap;font-family:var(--serif);font-weight:400;font-size:clamp(11px,2.5vw,32px);line-height:1.1;letter-spacing:-.01em;padding-inline:16px;pointer-events:none}
+.word{display:inline-block;white-space:nowrap}
+.ch{display:inline-block;clip-path:inset(0 0 0 0);transition:clip-path .5s cubic-bezier(.6,0,.3,1),opacity .4s ease .2s;animation:write .5s cubic-bezier(.2,.7,.2,1) both}
+.ch.cut{clip-path:inset(0 100% 0 0);opacity:0}
+@keyframes write{from{opacity:0;transform:translateY(.18em)}}
+.discover{display:flex;flex-direction:column;align-items:center;gap:6px;padding-block:18px 26px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;text-decoration:none}
+.discover svg{display:block}
+.replay{all:unset;position:absolute;right:clamp(16px,3vw,40px);bottom:18px;z-index:2;cursor:pointer;font-family:var(--serif);font-style:italic;font-size:14px;text-decoration:underline;text-underline-offset:3px;opacity:0;transition:opacity .4s}
+.replay.on{opacity:1}
+.replay:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* intro under the hero */
+.intro{text-align:center}
+.intro p.lead{font-family:var(--serif);font-size:clamp(22px,2.8vw,30px);line-height:1.4;max-width:30em;margin-inline:auto}
+.intro .ctas{display:flex;gap:28px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:40px}
+.works{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 22px;margin-top:48px;font-size:14px;color:var(--ink-2)}
+.works span:first-child{width:100%;font-size:11.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.works b{font-weight:400;font-family:var(--serif);font-size:17px;color:var(--ink)}
+
+/* features */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 56px}
+.grid h3{font-size:24px;margin-bottom:8px}
+.grid p{color:var(--ink-2);font-size:15.5px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sub-head{margin:80px 0 28px;display:flex;flex-direction:column;gap:10px}
+.sub-head h3{font-size:clamp(28px,3.6vw,38px);font-style:italic}
+.sub-head p{color:var(--ink-2);max-width:52ch}
+.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-top:24px;border-top:1px solid var(--line)}
+.results b{display:block;font-weight:500;font-size:15px;margin-bottom:4px}
+.results p{color:var(--ink-2);font-size:14px}
+
+/* steps */
+.steps2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:52px 56px}
+.steps2 span{display:block;font-family:var(--serif);font-style:italic;font-size:18px;margin-bottom:8px}
+.steps2 h3{font-size:24px;margin-bottom:8px}
+.steps2 > div > p{color:var(--ink-2);font-size:15.5px}
+.steps2 em{display:block;font-style:normal;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;margin-top:14px}
+.steps2 em small{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:none;font-weight:400;margin-left:8px}
+.steps2 ul,.cta-list,.price ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--ink-2)}
+.steps2 li::before,.cta-list li::before,.price li::before{content:"—";margin-right:10px;color:var(--ink)}
+
+/* pricing */
+.price{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.big{font-family:var(--serif);font-size:84px;line-height:1}
+.big small{font-family:var(--sans);font-size:15px;color:var(--ink-2);margin-left:8px}
+.price-note{color:var(--ink-2);font-size:15.5px;margin-top:16px;max-width:38ch}
+.price ul{margin:24px 0 32px}
+.calc{display:flex;flex-direction:column;gap:18px;background:var(--paper);border:1px solid var(--line);padding:28px}
+.calc h3{font-size:24px;font-style:italic}
+.calc .row{display:flex;flex-direction:column;gap:6px}
+.calc label{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:var(--ink-2)}
+.calc label output{color:var(--ink);font-weight:500}
+.calc input[type=range]{width:100%;margin:0;accent-color:var(--ink)}
+.calc .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.calc .two span{display:block;font-size:13px;color:var(--ink-2)}
+.calc .two strong{font-family:var(--serif);font-size:26px;font-weight:400}
+.calc .net{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.calc .net span{font-size:14px;color:var(--ink-2)}
+.calc .net strong{font-family:var(--serif);font-size:40px;font-weight:400;color:var(--good)}
+.fine{margin-top:14px;font-size:13px;color:var(--muted)}
+
+/* sample calls */
+.picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:40px}
+.picks button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:16px;padding:22px;border:1px solid var(--line);background:transparent;transition:background .2s,border-color .2s}
+.picks button:hover{background:var(--paper)}
+.picks button[aria-selected="true"]{background:var(--paper);border-color:var(--ink)}
+.picks button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.picks q{font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.35}
+.picks small{color:var(--ink-2);font-size:13.5px}
+.picks small b{display:block;color:var(--ink);font-weight:500;font-size:14.5px}
+.callhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.callhead h3{font-size:28px}
+.callhead p{color:var(--ink-2);font-size:14.5px}
+.transcript{display:flex;flex-direction:column;gap:12px;font-size:16px}
+.transcript div{display:grid;grid-template-columns:80px 1fr;gap:16px;transition:opacity .3s}
+.transcript b{font-size:11.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.transcript div span{color:var(--ink-2)}
+.transcript div.c span{color:var(--ink);font-family:var(--serif);font-style:italic;font-size:17.5px}
+.transcript.playing div.wait{opacity:.2}
+.callfoot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-2)}
+.ghostbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border:1px solid var(--ink);font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+.ghostbtn:hover{background:var(--ink);color:var(--bg)}
+.ghostbtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-child{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;font-family:var(--serif);font-size:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--sans);font-size:22px;line-height:1;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 22px;color:var(--ink-2);max-width:62ch}
+.mail{margin-top:28px;color:var(--ink-2)}
+.mail b{color:var(--ink);font-weight:500;user-select:all}
+
+/* closing: CTA + try a call */
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.cta h2{font-size:clamp(36px,5vw,54px);line-height:1.05}
+.cta .lead > p{color:var(--ink-2);margin-top:16px;max-width:42ch}
+.cta-list{margin:24px 0 32px}
+.cta .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:14.5px;color:var(--ink-2)}
+.sim{background:var(--paper);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:14px;min-height:440px}
+.sim header{display:flex;justify-content:space-between;font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.sim header span:last-child{color:var(--muted)}
+.log{flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:310px}
+.log p{max-width:86%;padding:11px 14px;font-size:15px;line-height:1.45}
+.log p.a{background:var(--bg);align-self:flex-start}
+.log p.c{align-self:flex-end;background:var(--ink);color:var(--bg)}
+.log p.end{align-self:stretch;max-width:none;border:1px solid var(--line);color:var(--ink-2);font-size:14.5px}
+.log p.end b{color:var(--ink);font-weight:500}
+.replies{display:flex;gap:8px;flex-wrap:wrap}
+.replies small{width:100%;font-size:11.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.replies button{all:unset;cursor:pointer;padding:10px 16px;border:1px solid var(--ink);font-size:14.5px;transition:background .2s,color .2s}
+.replies button:hover{background:var(--ink);color:var(--bg)}
+.replies button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding-block:56px 40px}
+.grid3{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;font-size:15px}
+.grid3 p{color:var(--ink-2);margin-top:14px;max-width:34ch}
+.grid3 .col{display:flex;flex-direction:column;gap:8px}
+.grid3 strong{font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;margin-bottom:6px}
+.grid3 .col a{text-decoration:none;font-family:var(--serif);color:var(--ink-2)}
+.grid3 .col a:hover{color:var(--ink)}
+.copy{margin-top:44px;font-size:13px;color:var(--muted)}
+
+@media (max-width:860px){
+  .nav ul li.opt{display:none}
+}
+@media (max-width:760px){
+  section{padding-block:76px}
+  .stage{aspect-ratio:4/5;max-height:none;min-height:0}
+  .words{top:46%}
+  .grid,.price,.steps2,.cta,.picks,.grid3{grid-template-columns:1fr}
+  .results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .big{font-size:68px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ch{animation:none;transition:none}
+  .glow{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="in">
+    <a class="logo" href="#top" aria-label="HaanJi home">haanji</a>
+    <ul>
+      <li class="opt"><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li class="opt"><a href="#calls">Sample calls</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li class="opt"><a href="#try">Get started</a></li>
+      <li><a class="ph" href="#try" aria-label="Try a call"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M21 16.5v3a2 2 0 0 1-2.2 2A19 19 0 0 1 2.5 5.2 2 2 0 0 1 4.5 3h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.4 10.8a16 16 0 0 0 4.8 4.8l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO: she walks in, the headline is cut away, she sits and starts calling -->
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <h1 class="sr">Every COD order, confirmed.</h1>
+  <div class="stage" id="stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="words" id="words" aria-hidden="true"></div>
+    <button class="replay" type="button" id="replay">Watch again</button>
+  </div>
+  <a class="discover" href="#intro">Discover more<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M0 0h10L5 6z" fill="currentColor"/></svg></a>
+</section>
+
+<section class="intro" id="intro">
+  <div class="wrap">
+    <p class="lead">HaanJi calls your customer in Hindi, Hinglish or English a few minutes after they order. Fake and unwanted orders are caught before you ship them, so you stop paying for RTO.</p>
+    <div class="ctas">
+      <a class="btn" href="#try">Start with 50 free calls</a>
+      <a class="link" href="#calls">Hear a call</a>
+    </div>
+    <div class="works"><span>Works with what you already use</span><b>Shopify</b><b>Excel &amp; CSV</b><b>UPI recharge</b><b>Hindi</b><b>Hinglish</b><b>English</b></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Features</p>
+      <h2>Built for cash on delivery in India.</h2>
+      <p>One job, done well: find out if the customer really wants the order before it leaves your warehouse.</p>
+    </div>
+    <div class="grid">
+      <div><h3>Talks the way your customers talk</h3><p>A natural voice that understands “haan”, “nahi” and “baad mein”. Pick Hindi, Hinglish or English and one of four voices for your brand.</p></div>
+      <div><h3>Results land on the order</h3><p>Each Shopify order gets a tag and a note after the call. No Shopify? Upload an Excel sheet and download the results.</p><div class="tags"><code class="tag">cod-confirmed</code><code class="tag">cod-cancelled</code><code class="tag">cod-callback</code></div></div>
+      <div><h3>Calls at the right time</h3><p>The first call goes out 5 minutes after the order, only between 9 AM and 9 PM. Missed calls are retried up to 3 times, 2 hours apart. You can change all of it.</p></div>
+      <div><h3>Every call, on record</h3><p>Listen to the recording, read the transcript and see why a customer cancelled. Your dashboard shows the RTO money you saved this month.</p></div>
+    </div>
+    <div class="sub-head">
+      <h3>One call. One clear answer.</h3>
+      <p>Every call ends in one of four results, written straight back to your order. You decide what to ship.</p>
+    </div>
+    <div class="results">
+      <div><b><span class="dot" style="background:var(--good)"></span>Confirmed</b><p>Tagged and ready to ship</p></div>
+      <div><b><span class="dot" style="background:var(--crit)"></span>Cancelled</b><p>Stopped before shipping, reason saved</p></div>
+      <div><b><span class="dot" style="background:var(--warn)"></span>Call later</b><p>Called back at the time they asked</p></div>
+      <div><b><span class="dot" style="background:var(--none)"></span>No answer</b><p>Tried again, up to 3 times</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">How it works</p>
+      <h2>Live in about ten minutes.</h2>
+      <p>No developer, no flowcharts. Four short steps from sign-up to your first real call.</p>
+    </div>
+    <div class="steps2">
+      <div><span>Step 1</span><h3>Connect your store</h3><p>Sign in with Google or your mobile number, then connect Shopify in one click.</p><em>2 min</em>
+        <ul><li>Only new COD orders are called</li><li>Prepaid orders are skipped</li><li>No Shopify? Upload an Excel or CSV sheet</li></ul></div>
+      <div><span>Step 2</span><h3>Pick a language and voice</h3><p>Tap play to hear each voice. You can change them anytime.</p><em>1 min</em>
+        <ul><li>Hindi, Hinglish or English</li><li>Ananya, Meera, Rohit or Kabir</li><li>Your brand name in every greeting</li></ul></div>
+      <div><span>Step 3</span><h3>Take a test call</h3><p>HaanJi calls your own phone with a sample order, so you hear exactly what customers will hear.</p><em>Free<small>test calls cost nothing</small></em>
+        <ul><li>Edit any line in plain text boxes</li><li>See a live preview as you type</li><li>Test again as often as you like</li></ul></div>
+      <div><span>Step 4</span><h3>Go live</h3><p>From now on, every new COD order gets its call automatically. Pause anytime from settings.</p><em>50 calls</em>
+        <ul><li>₹150 free credit to start</li><li>Results in Shopify and your dashboard</li><li>Dashboard in English or हिंदी</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Pricing</p>
+      <h2>Pay only when they pick up.</h2>
+      <p>No monthly plan and no setup fee. Add money by UPI and calls use it up.</p>
+    </div>
+    <div class="price">
+      <div>
+        <p class="eyebrow" style="margin-bottom:16px">Pay as you go</p>
+        <div class="big num">₹3<small>per answered call</small></div>
+        <p class="price-note">Covers the first minute. Most confirmation calls finish well inside it.</p>
+        <ul>
+          <li>₹2 for each extra minute</li>
+          <li>Unanswered, busy and test calls are free</li>
+          <li>₹150 free credit when you sign up</li>
+          <li>Recharge by UPI from ₹500</li>
+        </ul>
+        <a class="btn" href="#try">Start with 50 free calls</a>
+      </div>
+      <form class="calc" id="calc" onsubmit="return false">
+        <h3>What could you save?</h3>
+        <div class="row">
+          <label for="c-orders">COD orders a month <output id="o-orders" class="num">3,000</output></label>
+          <input id="c-orders" type="range" min="100" max="20000" step="100" value="3000">
+        </div>
+        <div class="row">
+          <label for="c-rto">RTO cost per returned order <output id="o-rto" class="num">₹160</output></label>
+          <input id="c-rto" type="range" min="60" max="400" step="10" value="160">
+        </div>
+        <div class="row">
+          <label for="c-cancel">Orders customers don’t really want <output id="o-cancel" class="num">8%</output></label>
+          <input id="c-cancel" type="range" min="1" max="30" step="1" value="8">
+        </div>
+        <div class="two">
+          <div><span>RTO you avoid</span><strong class="num" id="r-saved">₹38,400</strong></div>
+          <div><span>HaanJi calls, at most</span><strong class="num" id="r-cost">₹9,000</strong></div>
+        </div>
+        <div class="net"><span>Left in your pocket each month</span><strong class="num" id="r-net">₹29,400</strong></div>
+        <p class="fine" style="margin:0">An estimate from your own numbers. The call cost assumes every customer picks up and talks for under a minute; unanswered calls are free, so the real cost is usually lower.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="calls">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Sample calls</p>
+      <h2>Hear how HaanJi talks.</h2>
+      <p>Three sample calls for a made-up store, Kesar Kurtis. Your calls use your brand name, your products and your chosen voice.</p>
+    </div>
+    <div class="picks" role="tablist" aria-label="Choose a sample call">
+      <button role="tab" type="button" data-i="0" aria-selected="true"><q>Haan ji, bhej dijiye.</q><small><b>Priya Sharma</b>Jaipur · Confirmed</small></button>
+      <button role="tab" type="button" data-i="1" aria-selected="false"><q>Nahi, galti se order ho gaya.</q><small><b>Rahul Verma</b>Lucknow · Cancelled</small></button>
+      <button role="tab" type="button" data-i="2" aria-selected="false"><q>Abhi meeting mein hoon, shaam ko call karna.</q><small><b>Sneha Patil</b>Pune · Call later</small></button>
+    </div>
+    <div class="callhead"><h3 id="p-name">Priya Sharma</h3><p id="p-order">Cotton Anarkali Kurti · ₹1,299 · Jaipur</p></div>
+    <div class="transcript" id="p-lines"></div>
+    <div class="callfoot">
+      <span id="p-result"></span>
+      <button class="ghostbtn" type="button" id="p-play"><svg width="9" height="9" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg><span>Play call</span></button>
+    </div>
+    <p class="fine">Playback uses your browser’s built-in voice, so it sounds more robotic than a real HaanJi call.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions sellers ask.</h2>
+      <p>Short answers about calls, money and your Shopify orders. Anything else, write to us.</p>
+    </div>
+    <div class="faq">
+      <details><summary>Does HaanJi cancel orders in Shopify by itself?</summary><p>No. It adds a tag and a note, like <code class="tag">cod-cancelled</code> with the reason. You stay in control of what gets cancelled and what gets shipped.</p></details>
+      <details><summary>What if the customer doesn’t pick up?</summary><p>HaanJi tries again up to 3 times, 2 hours apart, only inside your calling hours. If there is still no answer, the order is tagged <code class="tag">cod-no-answer</code>. Unanswered calls are free.</p></details>
+      <details><summary>What if the customer says “call me later”?</summary><p>HaanJi asks when, and calls back at that time. If they say “raat 11 baje”, the call moves to 9 AM the next morning, because nobody is called outside your calling hours.</p></details>
+      <details><summary>Can I change what HaanJi says?</summary><p>Yes. Every line of the call is a plain text box in your dashboard, with a live preview. Change it, save it, and the next call uses it.</p></details>
+      <details><summary>Do I need Shopify?</summary><p>No. You can upload an Excel or CSV sheet of orders and download a sheet with the results. Shopify just makes it automatic.</p></details>
+      <details><summary>What happens when my balance runs out?</summary><p>Calls pause, they aren’t lost. You get a warning when the balance drops below ₹300. As soon as you recharge, every waiting customer is called.</p></details>
+    </div>
+    <p class="mail">Write to us at <b>hello@haanji.in</b></p>
+  </div>
+</section>
+
+<section id="try">
+  <div class="wrap cta">
+    <div class="lead">
+      <h2>Stop paying for RTO.</h2>
+      <p>Every fake COD order you ship costs you courier charges both ways. Try a call right here as the customer, then start with 50 free calls.</p>
+      <ul class="cta-list">
+        <li>50 free calls, no card needed.</li>
+        <li>No monthly plan. Pay only for answered calls.</li>
+        <li>Set up yourself in about ten minutes.</li>
+      </ul>
+      <div class="row"><a class="btn" href="#try">Start with 50 free calls</a><span>or write to hello@haanji.in</span></div>
+    </div>
+    <div class="sim" aria-label="Try a sample call">
+      <header><span>Kesar Kurtis → You</span><span id="sim-state">Test call</span></header>
+      <div class="log" id="sim-log" aria-live="polite"></div>
+      <div class="replies" id="sim-replies"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grid3">
+      <div>
+        <a class="logo" href="#top">haanji</a>
+        <p>AI calls that confirm cash-on-delivery orders for Indian D2C brands, in the customer’s own language.</p>
+      </div>
+      <div class="col"><strong>Pages</strong><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#calls">Sample calls</a><a href="#faq">FAQ</a></div>
+      <div class="col"><strong>Support</strong><a href="#try">Try a call</a><a href="#faq">Contact</a></div>
+    </div>
+    <p class="copy">© 2026 HaanJi. Made in India.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return "₹" + Math.round(n).toLocaleString("en-IN"); }
+function clamp(v){ return Math.max(0, Math.min(1, v)); }
+function easeInOut(p){ return -(Math.cos(Math.PI*p) - 1)/2; }
+function easeOut(p){ return 1 - Math.pow(1-p, 3); }
+
+/* ================= HERO (3D): she walks in, the words are cut away, she sits and calls ================= */
+var HEADLINE = "Every COD order, confirmed.";
+var wordsEl = $("words"), replay = $("replay"), stage = $("stage"), canvas = $("gl");
+var letters = [];
+function writeWords(){
+  wordsEl.innerHTML = ""; letters = [];
+  var n = 0;
+  HEADLINE.split(" ").forEach(function(w, wi, all){
+    var ws = document.createElement("span"); ws.className = "word";
+    w.split("").forEach(function(c){
+      var s = document.createElement("span"); s.className = "ch"; s.textContent = c;
+      s.style.animationDelay = (n++ * 32) + "ms";
+      ws.appendChild(s); letters.push(s);
+    });
+    wordsEl.appendChild(ws);
+    if(wi < all.length - 1) wordsEl.appendChild(document.createTextNode(" "));
+  });
+}
+writeWords();
+
+(function hero3d(){
+  var T = window.THREE, renderer;
+  try{
+    if(!T) throw 0;
+    renderer = new T.WebGLRenderer({canvas: canvas, antialias: true, alpha: true});
+  }catch(e){ replay.hidden = true; return; }   /* no 3D: the headline simply stays */
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = T.sRGBEncoding;
+  renderer.toneMapping = T.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = T.PCFSoftShadowMap;
+  renderer.setClearColor(0x000000, 0);
+
+  var scene = new T.Scene();
+  var camera = new T.PerspectiveCamera(26, 2, 0.1, 100);
+
+  /* studio reflections: soft glowing panels baked into an environment map = the gloss */
+  var studio = new T.Scene();
+  studio.background = new T.Color(0xDCD6CC);
+  function panel(w, h, x, y, z, ry, rx, k){
+    var m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({color: new T.Color(k, k, k), side: T.DoubleSide}));
+    m.position.set(x, y, z); m.rotation.y = ry || 0; m.rotation.x = rx || 0; studio.add(m);
+  }
+  panel(8, 3, 0, 6, 0, 0, Math.PI/2, 3.2);
+  panel(4, 4, -6, 2, 2, Math.PI/2, 0, 2.4);
+  panel(3, 5, 6, 2, -1, -Math.PI/2, 0, 1.6);
+  panel(6, 2, 0, 2, 7, Math.PI, 0, 1.4);
+  var warm = new T.Mesh(new T.PlaneGeometry(7, 5), new T.MeshBasicMaterial({color: new T.Color(2.2, 0.75, 0.45), side: T.DoubleSide}));
+  warm.position.set(-3, -1, 5); warm.lookAt(0, 1, 0); studio.add(warm);
+  var pm = new T.PMREMGenerator(renderer);
+  scene.environment = pm.fromScene(studio, 0.03).texture;
+
+  scene.add(new T.HemisphereLight(0xffffff, 0xE7A58C, 0.55));
+  var key = new T.DirectionalLight(0xffffff, 1.5);
+  key.position.set(-3, 7, 5); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.left = -5; key.shadow.camera.right = 5; key.shadow.camera.top = 5; key.shadow.camera.bottom = -5;
+  key.shadow.bias = -0.0006;
+  scene.add(key);
+  var fill = new T.DirectionalLight(0xFF9C7A, 0.55); fill.position.set(-4, 1, 5); scene.add(fill);
+
+  var floor = new T.Mesh(new T.PlaneGeometry(40, 40), new T.ShadowMaterial({opacity: 0.16}));
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+
+  function mat(hex, rough, coat, metal){
+    return new T.MeshPhysicalMaterial({color: new T.Color(hex).convertSRGBToLinear(), roughness: rough, metalness: metal || 0, clearcoat: coat, clearcoatRoughness: 0.07});
+  }
+  var BLACK = mat(0x121212, 0.2, 1), HAIR = mat(0x161210, 0.3, 1), CREAM = mat(0xF3EAE2, 0.32, 1),
+      SKIN = mat(0xC48A66, 0.4, 0.6), GOLD = mat(0xD9A54A, 0.22, 0.5, 1), LIPS = mat(0x8E3B35, 0.35, 0.8),
+      KRAFT = mat(0xD3B285, 0.55, 0.3);
+
+  function mesh(geo, m, parent, x, y, z){
+    var o = new T.Mesh(geo, m); o.castShadow = true; o.receiveShadow = true;
+    o.position.set(x || 0, y || 0, z || 0); (parent || scene).add(o); return o;
+  }
+  var SPH = function(r){ return new T.SphereGeometry(r, 40, 24); };
+
+  /* ---------- the figure (faces +z in its own space; her right side is -x) ---------- */
+  var fig = new T.Group(); scene.add(fig);
+  var P = new T.Group(); fig.add(P);
+  var hips = mesh(SPH(0.16), BLACK, P); hips.scale.set(1, 0.72, 0.82);
+  var prof = [[0.001,0.02],[0.15,0.02],[0.18,0.12],[0.195,0.3],[0.185,0.46],[0.16,0.56],[0.09,0.62],[0.05,0.64]].map(function(q){ return new T.Vector2(q[0], q[1]); });
+  mesh(new T.LatheGeometry(prof, 48), CREAM, P);
+  mesh(new T.CylinderGeometry(0.048, 0.055, 0.14, 24), SKIN, P, 0, 0.68, 0);
+  var head = new T.Group(); head.position.set(0, 0.86, 0); P.add(head);
+  var skull = mesh(SPH(0.152), SKIN, head); skull.scale.set(0.94, 1.05, 1);
+  mesh(SPH(0.168), HAIR, head, 0, 0.035, -0.05);
+  [[0.1,-0.06,-0.12,0.07],[-0.1,-0.06,-0.12,0.07],[0,-0.1,-0.15,0.075],[0.08,-0.18,-0.12,0.065],[-0.08,-0.18,-0.12,0.065],
+   [0,-0.22,-0.1,0.06],[0.14,-0.12,-0.04,0.06],[-0.14,-0.12,-0.04,0.06],[0.12,0.04,-0.1,0.07],[-0.12,0.04,-0.1,0.07]].forEach(function(c){ mesh(SPH(c[3]), HAIR, head, c[0], c[1], c[2]); });
+  var bangs = mesh(SPH(0.1), HAIR, head, 0.02, 0.12, 0.07); bangs.scale.set(1.5, 0.55, 0.85);
+  mesh(SPH(0.016), BLACK, head, 0.055, 0.015, 0.142); mesh(SPH(0.016), BLACK, head, -0.055, 0.015, 0.142);
+  mesh(SPH(0.024), SKIN, head, 0, -0.025, 0.152);
+  var lips = mesh(SPH(0.02), LIPS, head, 0, -0.078, 0.138); lips.scale.set(1.6, 0.6, 0.6);
+  mesh(SPH(0.022), GOLD, head, 0.148, -0.07, 0.0); mesh(SPH(0.022), GOLD, head, -0.148, -0.07, 0.0);
+
+  /* limbs are drawn between joint points, so any pose works */
+  var DOWN = new T.Vector3(0, -1, 0), tmp = new T.Vector3();
+  function limb(rTop, rBot, m){ var o = mesh(new T.CylinderGeometry(rTop, rBot, 1, 28), m, fig); return o; }
+  function place(o, a, b){
+    tmp.subVectors(b, a); var len = tmp.length();
+    o.position.addVectors(a, b).multiplyScalar(0.5);
+    o.quaternion.setFromUnitVectors(DOWN, tmp.normalize());
+    o.scale.set(1, len, 1);
+  }
+  var L = {
+    thighL: limb(0.092, 0.086, BLACK), thighR: limb(0.092, 0.086, BLACK),
+    shinL: limb(0.088, 0.112, BLACK),  shinR: limb(0.088, 0.112, BLACK),
+    uarmL: limb(0.056, 0.05, CREAM),   uarmR: limb(0.056, 0.05, CREAM),
+    farmL: limb(0.05, 0.043, CREAM),   farmR: limb(0.05, 0.043, CREAM)
+  };
+  var kneeL = mesh(SPH(0.088), BLACK, fig), kneeR = mesh(SPH(0.088), BLACK, fig);
+  var elbL = mesh(SPH(0.05), CREAM, fig), elbR = mesh(SPH(0.05), CREAM, fig);
+  var shL = mesh(SPH(0.06), CREAM, fig), shR = mesh(SPH(0.06), CREAM, fig);
+  var handL = mesh(SPH(0.046), SKIN, fig), handR = mesh(SPH(0.046), SKIN, fig);
+  function boot(){
+    var g = new T.Group(); fig.add(g);
+    var f = mesh(SPH(0.08), BLACK, g, 0, -0.06, 0.06); f.scale.set(1, 0.7, 1.9);
+    mesh(new T.BoxGeometry(0.11, 0.07, 0.08), BLACK, g, 0, -0.085, -0.05);
+    return g;
+  }
+  var bootL = boot(), bootR = boot();
+  var phone = mesh(new T.BoxGeometry(0.055, 0.115, 0.014), BLACK, fig);
+
+  /* ---------- glossy table with a parcel ---------- */
+  var table = new T.Group(); table.position.set(0.35, 0, 0); scene.add(table);
+  mesh(new T.BoxGeometry(2.1, 0.05, 0.85), BLACK, table, 0, 0.925, 0);
+  [[-0.95,-0.33],[0.95,-0.33],[-0.95,0.33],[0.95,0.33]].forEach(function(q){ mesh(new T.CylinderGeometry(0.022, 0.018, 0.9, 16), BLACK, table, q[0], 0.45, q[1]); });
+  var parcel = new T.Group(); parcel.position.set(0.62, 0.95, -0.06); parcel.rotation.y = 0.28; table.add(parcel);
+  mesh(new T.BoxGeometry(0.38, 0.27, 0.3), KRAFT, parcel, 0, 0.135, 0);
+  mesh(new T.BoxGeometry(0.07, 0.272, 0.302), CREAM, parcel, 0, 0.135, 0);
+  table.scale.setScalar(0.0001);
+
+  /* call waves */
+  var waves = [0,1,2].map(function(){
+    var m = new T.MeshBasicMaterial({color: 0x111111, transparent: true, opacity: 0});
+    var w = new T.Mesh(new T.TorusGeometry(0.1, 0.007, 8, 48, Math.PI*0.55), m);
+    w.rotation.z = Math.PI - Math.PI*0.275; fig.add(w); return w;
+  });
+
+  /* ---------- poses ---------- */
+  function V(x, y, z){ return new T.Vector3(x, y, z); }
+  function walkPose(ph, amp){
+    var a = amp*Math.sin(ph), bob = 0.025*Math.abs(Math.cos(ph))*(amp/0.42);
+    var J = {P: V(0, 1.02 - bob, 0)};
+    function leg(side, h, k){
+      var hip = V(0.09*side, J.P.y - 0.02, 0);
+      var knee = V(hip.x, hip.y - 0.46*Math.cos(h), -0.46*Math.sin(h));
+      var ank = V(hip.x, knee.y - 0.46*Math.cos(h + k), knee.z - 0.46*Math.sin(h + k));
+      return [hip, knee, ank];
+    }
+    var l = leg(1, -a, 0.1 + 0.6*Math.max(0, Math.cos(ph))*(amp/0.42));
+    var r = leg(-1, a, 0.1 + 0.6*Math.max(0, -Math.cos(ph))*(amp/0.42));
+    J.hipL = l[0]; J.kneeL = l[1]; J.ankL = l[2]; J.hipR = r[0]; J.kneeR = r[1]; J.ankR = r[2];
+    function arm(side, s){
+      var sh = V(0.205*side, J.P.y + 0.58, 0);
+      var el = V(0.23*side, sh.y - 0.3*Math.cos(s), -0.3*Math.sin(s));
+      var hd = V(0.24*side, el.y - 0.28*Math.cos(s - 0.35), el.z - 0.28*Math.sin(s - 0.35));
+      return [sh, el, hd];
+    }
+    var al = arm(1, 0.8*a), ar = arm(-1, -0.8*a);
+    J.shL = al[0]; J.elL = al[1]; J.hdL = al[2]; J.shR = ar[0]; J.elR = ar[1]; J.hdR = ar[2];
+    return J;
+  }
+  var SIT = {
+    P: V(0, 1.08, 0),
+    hipL: V(0.09, 1.05, 0), kneeL: V(0.12, 1.07, 0.46), ankL: V(0.12, 0.62, 0.52),
+    hipR: V(-0.09, 1.05, 0), kneeR: V(0.03, 1.17, 0.5), ankR: V(0.22, 0.8, 0.74),
+    shL: V(0.205, 1.66, 0), elL: V(0.31, 1.38, -0.14), hdL: V(0.34, 1.0, -0.24),
+    shR: V(-0.205, 1.66, 0), elR: V(-0.27, 1.38, 0.2), hdR: V(-0.12, 1.2, 0.4)
+  };
+  var CALL = {elR: V(-0.33, 1.6, 0.2), hdR: V(-0.17, 1.86, 0.06)};
+  var KEYS = Object.keys(SIT);
+  var J = {}; KEYS.forEach(function(k){ J[k] = V(0,0,0); });
+
+  /* ---------- timeline (ms) and staging ---------- */
+  var T_WALK = 1500, D_WALK = 4300, T_SIT = T_WALK + D_WALK + 60, D_SIT = 950, T_ARM = T_SIT + D_SIT + 250, D_ARM = 750, T_CALL = T_ARM + D_ARM + 50;
+  var walkX0 = 3.1, walkX1 = 0.05, WALK_Z = 0.95, SIT_X = -0.3, SIT_Z = 0.24, SIT_ROT = -0.5, STRIDES = 7.5;
+  function easeBack(p){ var c = 1.6; return 1 + (c+1)*Math.pow(p-1, 3) + c*Math.pow(p-1, 2); }
+
+  function pose(t){
+    var p = clamp((t - T_WALK)/D_WALK), e = easeInOut(p);
+    var amp = 0.42*Math.min(1, Math.sin(Math.PI*p)*2.4);
+    var W = walkPose(p*STRIDES*2*Math.PI, amp);
+    var s = easeInOut(clamp((t - T_SIT)/D_SIT));
+    var c = easeOut(clamp((t - T_ARM)/D_ARM));
+    KEYS.forEach(function(k){
+      J[k].copy(W[k]).lerp(SIT[k], s);
+      if(c > 0 && CALL[k]) J[k].lerp(CALL[k], c);
+    });
+    var hop = 0.14*Math.sin(Math.PI*s);
+    KEYS.forEach(function(k){ J[k].y += hop; });
+
+    fig.position.set((walkX0 + (walkX1 - walkX0)*e)*(1 - s) + SIT_X*s, 0, WALK_Z*(1 - s) + SIT_Z*s);
+    fig.rotation.y = -Math.PI/2*(1 - s) + SIT_ROT*s;
+    P.position.copy(J.P);
+    head.rotation.z = 0.12*c;
+    head.rotation.y = -0.15*s;
+
+    place(L.thighL, J.hipL, J.kneeL); place(L.shinL, J.kneeL, J.ankL);
+    place(L.thighR, J.hipR, J.kneeR); place(L.shinR, J.kneeR, J.ankR);
+    place(L.uarmL, J.shL, J.elL); place(L.farmL, J.elL, J.hdL);
+    place(L.uarmR, J.shR, J.elR); place(L.farmR, J.elR, J.hdR);
+    kneeL.position.copy(J.kneeL); kneeR.position.copy(J.kneeR);
+    elbL.position.copy(J.elL); elbR.position.copy(J.elR);
+    shL.position.copy(J.shL); shR.position.copy(J.shR);
+    handL.position.copy(J.hdL); handR.position.copy(J.hdR);
+    bootL.position.copy(J.ankL); bootL.quaternion.copy(L.shinL.quaternion);
+    bootR.position.copy(J.ankR); bootR.quaternion.copy(L.shinR.quaternion);
+    phone.position.copy(J.hdR); phone.quaternion.copy(L.farmR.quaternion);
+    phone.translateY(-0.06); phone.translateZ(0.03);
+
+    /* table pops up as she gets close; the words are cut, last letter first */
+    var tp = clamp((p - 0.5)/0.35);
+    table.scale.setScalar(tp > 0 ? Math.max(0.0001, easeBack(tp)) : 0.0001);
+    var N = letters.length;
+    for(var k=0;k<N;k++){
+      var el = letters[N-1-k];
+      if(p >= 0.02 + 0.36*(k/N)) el.classList.add("cut");   /* all gone before the table (p 0.5) */ else el.classList.remove("cut");
+    }
+
+    /* calling: waves ripple out beside her ear */
+    waves.forEach(function(w, j){
+      if(t < T_CALL){ w.material.opacity = 0; return; }
+      var q = reduce ? (j+1)/4 : (((t - T_CALL)/1300) + j/3) % 1;
+      var sc = 0.9 + q*1.6;
+      w.position.set(-0.33, 1.97 + hop, 0.06); w.scale.setScalar(sc);
+      w.material.opacity = reduce ? 0.8 - j*0.2 : Math.sin(Math.PI*q)*0.9;
+    });
+    replay.classList.toggle("on", t >= T_CALL);
+  }
+
+  /* ---------- camera fits the stage ---------- */
+  function fit(){
+    var w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    var asp = w/h; camera.aspect = asp;
+    var z = Math.max(7.4, 2.5/(Math.tan(13*Math.PI/180)*asp));
+    var cx = asp < 1 ? 0.15 : 0.35;
+    camera.position.set(cx, 1.5, z); camera.lookAt(cx, 1.02, 0);
+    camera.updateProjectionMatrix();
+    walkX0 = asp < 1 ? 2.3 : 3.1;
+  }
+
+  var clock = 0, last = null, raf = null, onScreen = true;
+  function frame(ts){
+    if(last === null) last = ts;
+    clock += Math.min(64, ts - last); last = ts;
+    pose(clock); renderer.render(scene, camera);
+    raf = (onScreen && !reduce) ? requestAnimationFrame(frame) : null;
+  }
+  function run(){ if(!raf && !reduce){ last = null; raf = requestAnimationFrame(frame); } }
+  function play(){
+    writeWords(); clock = 0;
+    if(reduce){ letters.forEach(function(l){ l.classList.add("cut"); }); pose(T_CALL + 400); renderer.render(scene, camera); return; }
+    run();
+  }
+  fit();
+  if(window.ResizeObserver) new ResizeObserver(function(){ fit(); if(!raf){ pose(reduce ? T_CALL + 400 : clock); renderer.render(scene, camera); } }).observe(stage);
+  else window.addEventListener("resize", fit);
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(es){ onScreen = es[0].isIntersecting; if(onScreen) run(); }).observe(stage);
+  }
+  replay.addEventListener("click", play);
+  play();
+})();
+
+/* ================= savings estimate ================= */
+function calc(){
+  var o = +$("c-orders").value, r = +$("c-rto").value, p = +$("c-cancel").value;
+  var saved = o*p/100*r, cost = o*3, net = saved - cost;
+  $("o-orders").textContent = o.toLocaleString("en-IN");
+  $("o-rto").textContent = fmt(r);
+  $("o-cancel").textContent = p + "%";
+  $("r-saved").textContent = fmt(saved);
+  $("r-cost").textContent = fmt(cost);
+  $("r-net").textContent = (net < 0 ? "−" : "") + fmt(Math.abs(net));
+  $("r-net").style.color = net < 0 ? "var(--crit)" : "var(--good)";
+}
+$("calc").addEventListener("input", calc); calc();
+
+/* ================= sample calls ================= */
+var CALLS = [
+  {first:"Priya", name:"Priya Sharma", order:"Cotton Anarkali Kurti · ₹1,299 · Jaipur",
+   lines:[["a","Namaste Priya ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,299 ka Cotton Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Haan ji, bhej dijiye."],["a","Bahut badhiya! Aapka delivery address hai: B-24, Malviya Nagar, Jaipur. Kya ye sahi hai?"],["c","Haan, sahi hai."],["a","Dhanyavaad Priya ji! Aapka order 2-3 din mein pahunch jayega."]],
+   result:'<span class="dot" style="background:var(--good)"></span>Confirmed · tagged <code class="tag">cod-confirmed</code> · ready to ship'},
+  {first:"Rahul", name:"Rahul Verma", order:"Linen Kurta Set · ₹1,849 · Lucknow",
+   lines:[["a","Namaste Rahul ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,849 ka Linen Kurta Set order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Nahi, galti se order ho gaya."],["a","Koi baat nahi. Kya aap bata sakte hain ki cancel kyun karna hai?"],["c","Size galat select ho gaya tha."],["a","Samajh gayi. Aapka order cancel kar diya gaya hai. Dhanyavaad!"]],
+   result:'<span class="dot" style="background:var(--crit)"></span>Cancelled · tagged <code class="tag">cod-cancelled</code> · reason: wrong size · not shipped'},
+  {first:"Sneha", name:"Sneha Patil", order:"Block Print Dupatta · ₹899 · Pune",
+   lines:[["a","Namaste Sneha ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹899 ka Block Print Dupatta order kiya hai, cash on delivery. Kya hum ise ship kar dein?"],["c","Abhi meeting mein hoon, shaam ko call karna."],["a","Bilkul, koi baat nahi. Aapko kab call karein?"],["c","Shaam 6 baje."],["a","Theek hai, main shaam 6 baje call karungi. Dhanyavaad!"]],
+   result:'<span class="dot" style="background:var(--warn)"></span>Call later · tagged <code class="tag">cod-callback</code> · next call today at 6:00 PM'}
+];
+var cur = 0, token = 0, playing = false;
+var linesEl = $("p-lines"), tabs = document.querySelectorAll(".picks button"), playBtn = $("p-play");
+function show(i){
+  stop(); cur = i; var k = CALLS[i];
+  tabs.forEach(function(b){ b.setAttribute("aria-selected", String(+b.dataset.i === i)); });
+  $("p-name").textContent = k.name;
+  $("p-order").textContent = k.order;
+  linesEl.innerHTML = "";
+  k.lines.forEach(function(l){
+    var d = document.createElement("div"); d.className = l[0];
+    var b = document.createElement("b"); b.textContent = l[0] === "a" ? "HaanJi" : k.first;
+    var s = document.createElement("span"); s.textContent = l[1];
+    d.appendChild(b); d.appendChild(s); linesEl.appendChild(d);
+  });
+  $("p-result").innerHTML = k.result;
+}
+tabs.forEach(function(b){ b.addEventListener("click", function(){ show(+b.dataset.i); }); });
+var synth = window.speechSynthesis;
+function pickVoice(){
+  if(!synth) return null;
+  var vs = []; try{ vs = synth.getVoices(); }catch(e){}
+  return vs.filter(function(v){ return /hi[-_]IN/i.test(v.lang); })[0] || vs.filter(function(v){ return /en[-_]IN/i.test(v.lang); })[0] || null;
+}
+function label(on){ playBtn.querySelector("span").textContent = on ? "Stop" : "Play call"; }
+function stop(){
+  token++; playing = false;
+  try{ if(synth) synth.cancel(); }catch(e){}
+  linesEl.classList.remove("playing");
+  linesEl.querySelectorAll("div").forEach(function(d){ d.classList.remove("wait"); });
+  label(false);
+}
+function speak(text, agent, done){
+  var ok = false;
+  if(synth){
+    try{
+      var u = new SpeechSynthesisUtterance(text), v = pickVoice();
+      if(v){ u.voice = v; u.lang = v.lang; } else { u.lang = "hi-IN"; }
+      u.rate = .98; u.pitch = agent ? 1.1 : .9; u.onend = done; u.onerror = done;
+      synth.speak(u); ok = true;
+    }catch(e){ ok = false; }
+  }
+  if(!ok) setTimeout(done, 900 + text.length*45);
+}
+playBtn.addEventListener("click", function(){
+  if(playing){ stop(); return; }
+  var t = ++token, rows = linesEl.querySelectorAll("div"), k = CALLS[cur], i = 0;
+  playing = true; label(true);
+  linesEl.classList.add("playing");
+  rows.forEach(function(d){ d.classList.add("wait"); });
+  (function next(){
+    if(t !== token) return;
+    if(i >= rows.length){ stop(); return; }
+    rows[i].classList.remove("wait");
+    var line = k.lines[i]; i++;
+    speak(line[1], line[0] === "a", function(){ if(t === token) setTimeout(next, 250); });
+  })();
+});
+show(0);
+
+/* ================= try-a-call (same steps as the real script) ================= */
+var FLOW = {
+  greet:{say:"Namaste ji, main Kesar Kurtis se Ananya bol rahi hoon. Aapne ₹1,299 ka Cotton Anarkali Kurti order kiya hai, cash on delivery. Kya hum ise ship kar dein?",
+    opts:[["Haan, bhej do","confirm_address"],["Nahi chahiye","ask_reason"],["Baad mein call karo","ask_callback_time"]]},
+  confirm_address:{say:"Bahut badhiya! Aapka delivery address hai: B-24, Malviya Nagar, Jaipur 302017. Kya ye sahi hai?",
+    opts:[["Haan, sahi hai","close_confirmed"],["Address badalna hai","take_new_address"]]},
+  take_new_address:{say:"Koi baat nahi, naya address bata dijiye.", opts:[["Flat 12, Shanti Apartments, C-Scheme, Jaipur","close_confirmed"]]},
+  close_confirmed:{say:"Dhanyavaad ji! Aapka order 2-3 din mein pahunch jayega.", end:["Confirmed","cod-confirmed","Ready to ship."]},
+  ask_reason:{say:"Koi baat nahi. Kya aap bata sakte hain ki cancel kyun karna hai?",
+    opts:[["Galti se order ho gaya","close_cancelled"],["Price zyada lag raha hai","close_cancelled"],["Kahin aur se le liya","close_cancelled"]]},
+  close_cancelled:{say:"Samajh gayi. Aapka order cancel kar diya gaya hai. Dhanyavaad!", end:["Cancelled","cod-cancelled","Not shipped, so no RTO."]},
+  ask_callback_time:{say:"Bilkul, koi baat nahi. Aapko kab call karein?", opts:[["Shaam 6 baje","close_callback"],["Kal subah","close_callback"]]},
+  close_callback:{say:"Theek hai, main tab call karungi. Dhanyavaad!", end:["Call later","cod-callback","HaanJi calls again at that time."]}
+};
+var log = $("sim-log"), reps = $("sim-replies"), state = $("sim-state");
+function bubble(cls, text){ var p = document.createElement("p"); p.className = cls; p.textContent = text; log.appendChild(p); log.scrollTop = log.scrollHeight; }
+function go(node){
+  var n = FLOW[node];
+  bubble("a", n.say);
+  reps.innerHTML = "";
+  if(n.end){
+    state.textContent = "Call ended";
+    var p = document.createElement("p"); p.className = "end";
+    p.innerHTML = 'Result: <b></b> · tagged <b class="t"></b> in Shopify. <span></span>';
+    p.querySelector("b").textContent = n.end[0]; p.querySelector(".t").textContent = n.end[1]; p.querySelector("span").textContent = n.end[2];
+    log.appendChild(p); log.scrollTop = log.scrollHeight;
+    var again = document.createElement("button"); again.type = "button"; again.textContent = "Try another answer";
+    again.addEventListener("click", start2); reps.appendChild(again);
+    return;
+  }
+  var hint = document.createElement("small"); hint.textContent = "Answer as the customer"; reps.appendChild(hint);
+  n.opts.forEach(function(o){
+    var b = document.createElement("button"); b.type = "button"; b.textContent = o[0];
+    b.addEventListener("click", function(){ bubble("c", o[0]); reps.innerHTML = ""; setTimeout(function(){ go(o[1]); }, reduce ? 0 : 400); });
+    reps.appendChild(b);
+  });
+}
+function start2(){ log.innerHTML = ""; state.textContent = "Test call"; go("greet"); }
+start2();
+})();
+</script>
+</body>
+</html>

@@ -1,70 +1,39 @@
 /* Colours and type from dashboard/prototype/haanji-prototype.html */
+/* Colours and type match the marketing site (website/index.html): warm paper, black ink, Plus Jakarta Sans. */
 :root {
-  --ground: #F2F5F3;
-  --surface: #FFFFFF;
-  --surface-2: #F7F9F8;
-  --ink: #13201B;
-  --ink-2: #47554F;
-  --muted: #76837E;
-  --line: #DCE3DF;
-  --line-2: #C9D2CD;
-  --brand: #0B6E5B;
-  --brand-hover: #095C4C;
-  --brand-ink: #FFFFFF;
-  --brand-soft: #DCEFE8;
-  --brand-text: #0A5D4D;
-  --marigold: #F2A20C;
-  --marigold-soft: #FFF1D2;
+  --ground: #F5EEEA;
+  --surface: #FFFCFA;
+  --surface-2: #EFE6E0;
+  --ink: #111111;
+  --ink-2: #5C5450;
+  --muted: #7D736D;
+  --line: rgba(17, 17, 17, .12);
+  --line-2: rgba(17, 17, 17, .22);
+  --brand: #111111;
+  --brand-hover: #333333;
+  --brand-ink: #F5EEEA;
+  --brand-soft: #E8DDD6;
+  --brand-text: #111111;
+  --marigold: #B9832A;
+  --marigold-soft: #F1E4D2;
   --marigold-ink: #5A3A00;
-  --s-good: #0ca30c;
-  --s-crit: #d03b3b;
-  --s-warn: #fab219;
-  --s-none: #AEB8B3;
-  --good-text: #006300;
-  --crit-text: #A82626;
+  --s-good: #3E8A57;
+  --s-crit: #BF4639;
+  --s-warn: #B9832A;
+  --s-none: #B5ABA5;
+  --good-text: #2E6B43;
+  --crit-text: #9A3329;
   --warn-text: #7A5300;
-  --none-text: #55625D;
-  --good-bg: #E2F4E2;
-  --crit-bg: #FBE6E6;
-  --warn-bg: #FFF2D1;
-  --none-bg: #ECEFEE;
-  --shadow: 0 1px 2px rgba(19, 32, 27, .06), 0 8px 24px rgba(19, 32, 27, .08);
-  --display: var(--font-display), var(--font-body), system-ui, sans-serif;
-  --body: var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --none-text: #5C5450;
+  --good-bg: #E3EEE5;
+  --crit-bg: #F6E1DE;
+  --warn-bg: #F4E8D3;
+  --none-bg: #ECE5E0;
+  --shadow: 0 1px 2px rgba(17, 17, 17, .05), 0 8px 24px rgba(17, 17, 17, .06);
+  --display: var(--font-body), var(--font-hindi), system-ui, sans-serif;
+  --body: var(--font-body), var(--font-hindi), system-ui, sans-serif;
   --mono: var(--font-mono), ui-monospace, Menlo, monospace;
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --ground: #0E1412;
-    --surface: #16201C;
-    --surface-2: #1B2622;
-    --ink: #E8F0EC;
-    --ink-2: #AAB8B2;
-    --muted: #7F8D87;
-    --line: #26332E;
-    --line-2: #33423C;
-    --brand: #2DB291;
-    --brand-hover: #3CC4A2;
-    --brand-ink: #06231B;
-    --brand-soft: #123A30;
-    --brand-text: #5ED3B3;
-    --marigold: #F5B83D;
-    --marigold-soft: #3A2C0C;
-    --marigold-ink: #FFE2A6;
-    --s-none: #56635E;
-    --good-text: #4CC44C;
-    --crit-text: #F08080;
-    --warn-text: #F7C75A;
-    --none-text: #A6B3AE;
-    --good-bg: #16301A;
-    --crit-bg: #3A1A1A;
-    --warn-bg: #3A2E10;
-    --none-bg: #222C28;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
-  }
 }
 
 * { box-sizing: border-box; }
@@ -77,7 +46,7 @@ body {
   font-size: 15px;
   line-height: 1.5;
 }
-h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; font-weight: 700; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; font-weight: 700; letter-spacing: -.025em; }
 h2 { font-size: 24px; }
 p { margin: 0; }
 a { color: inherit; text-decoration: none; }

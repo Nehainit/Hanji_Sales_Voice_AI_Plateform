@@ -16,11 +16,7 @@ const NAV: { href: string; label: TextKey; icon: string }[] = [
 function Logo() {
   return (
     <span className={styles.logo}>
-      <svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true">
-        <rect width="30" height="30" rx="9" fill="var(--brand)" />
-        <path d="M9 15.5l4 4 8-9" fill="none" stroke="var(--brand-ink)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      HaanJi
+      haanji
     </span>
   );
 }
